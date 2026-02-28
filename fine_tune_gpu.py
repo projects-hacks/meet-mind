@@ -196,30 +196,24 @@ def train(model_name: str, training_file: str, output_dir: str):
         max_length=MAX_SEQ_LENGTH,
     )
 
-    # ── Custom collator for Gemma 3 multimodal: injects token_type_ids ──
+    # ── Custom SFTTrainer subclass for Gemma 3 multimodal ──
     # Gemma 3 4B is vision+text. token_type_ids tells the model:
     #   0 = text token, 1 = image token
-    # Since we're doing text-only fine-tuning, all IDs are 0.
-    from transformers import DataCollatorForLanguageModeling
-
-    class Gemma3TextCollator(DataCollatorForLanguageModeling):
-        """Injects token_type_ids=0 for all tokens (text-only training on multimodal Gemma 3)."""
-        def __call__(self, features, return_tensors=None):
-            batch = super().__call__(features, return_tensors=return_tensors)
-            # Add token_type_ids = 0 (text) for all tokens
-            batch["token_type_ids"] = torch.zeros_like(batch["input_ids"])
-            return batch
-
-    collator = Gemma3TextCollator(tokenizer=tokenizer, mlm=False)
+    # We inject token_type_ids=0 for all tokens at compute_loss time.
+    class Gemma3SFTTrainer(SFTTrainer):
+        """SFTTrainer that injects token_type_ids=0 (text-only) for Gemma 3 multimodal."""
+        def compute_loss(self, model, inputs, *args, **kwargs):
+            if "token_type_ids" not in inputs:
+                inputs["token_type_ids"] = torch.zeros_like(inputs["input_ids"])
+            return super().compute_loss(model, inputs, *args, **kwargs)
 
     # ── Trainer ──
-    trainer = SFTTrainer(
+    trainer = Gemma3SFTTrainer(
         model=model,
         args=training_args,
         train_dataset=train_dataset,
         eval_dataset=eval_dataset,
         processing_class=tokenizer,
-        data_collator=collator,
     )
 
     # ── Train! ──

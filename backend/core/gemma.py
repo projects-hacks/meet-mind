@@ -1,29 +1,29 @@
-"""MLX-based Gemma model provider — handles all LLM inference on Apple Silicon."""
+"""Gemma model provider — supports LM Studio API and MLX backends.
+
+Backends:
+  - LM Studio: Calls localhost API (http://localhost:1234/v1/chat/completions)
+    Best for fine-tuned models loaded in LM Studio GUI.
+  - MLX: Direct Apple Silicon inference via mlx-lm library.
+    Best for quick prototyping with HuggingFace models.
+"""
 
 import json
 import logging
+import os
 import time
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from mlx_lm import load, generate  # type: ignore[import-not-found]
+import requests
 
 logger = logging.getLogger(__name__)
 
 MAX_RETRIES = 2
 RETRY_DELAY = 0.5
 
-
-def _is_local_model_reference(model_id: str) -> bool:
-    """True when model_id points to a local path or local file reference."""
-    if not model_id or not model_id.strip():
-        return False
-    candidate = Path(model_id).expanduser()
-    if candidate.exists():
-        return True
-    # Explicit local-file convention
-    return model_id.startswith("file://")
+# LM Studio default endpoint
+LM_STUDIO_URL = os.environ.get("LM_STUDIO_URL", "http://localhost:1234/v1/chat/completions")
 
 
 def _extract_json(raw: str) -> dict[str, Any]:
@@ -89,13 +89,11 @@ def _extract_json(raw: str) -> dict[str, Any]:
 
     # Truncation recovery: fix trailing comma + close missing braces
     candidate = text[start:]
-    # Remove trailing incomplete values
     candidate = candidate.rstrip()
-    for _ in range(5):  # Try progressively closing braces
+    for _ in range(5):
         candidate = candidate.rstrip(",").rstrip()
         if not candidate.endswith("}"):
             candidate += "}"
-        # Close arrays too
         open_brackets = candidate.count("[") - candidate.count("]")
         candidate += "]" * max(0, open_brackets)
         open_braces = candidate.count("{") - candidate.count("}")
@@ -103,7 +101,6 @@ def _extract_json(raw: str) -> dict[str, Any]:
         try:
             return json.loads(candidate)
         except json.JSONDecodeError:
-            # Strip last key-value pair and try again
             last_comma = candidate.rfind(",")
             if last_comma > 0:
                 candidate = candidate[:last_comma]
@@ -114,8 +111,108 @@ def _extract_json(raw: str) -> dict[str, Any]:
     return {}
 
 
+# ══════════════════════════════════════════════════════════════════════
+# LM Studio API Provider (Primary — for fine-tuned Gemma 3 4B)
+# ══════════════════════════════════════════════════════════════════════
+
+class GemmaLMStudio:
+    """Calls LM Studio's OpenAI-compatible API for inference.
+
+    LM Studio runs locally and serves the fine-tuned Gemma 3 4B model.
+    API: http://localhost:1234/v1/chat/completions
+    """
+
+    def __init__(self, api_url: str = LM_STUDIO_URL):
+        self._api_url = api_url
+        self._model_name = None  # Auto-detected from LM Studio
+
+    def _get_model_name(self) -> str:
+        """Auto-detect the loaded model name from LM Studio."""
+        if self._model_name:
+            return self._model_name
+        try:
+            models_url = self._api_url.replace("/chat/completions", "/models")
+            resp = requests.get(models_url, timeout=5)
+            if resp.status_code == 200:
+                data = resp.json()
+                if data.get("data"):
+                    self._model_name = data["data"][0]["id"]
+                    return self._model_name
+        except Exception:
+            pass
+        return "local-model"
+
+    def generate(self, prompt: str, system_prompt: str = "", max_tokens: int = 1024) -> str:
+        """Generate text via LM Studio API."""
+        messages = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": prompt})
+
+        for attempt in range(MAX_RETRIES + 1):
+            try:
+                resp = requests.post(
+                    self._api_url,
+                    json={
+                        "model": self._get_model_name(),
+                        "messages": messages,
+                        "max_tokens": max_tokens,
+                        "temperature": 0.3,
+                        "top_p": 0.9,
+                    },
+                    timeout=120,
+                )
+                resp.raise_for_status()
+                data = resp.json()
+                content = data["choices"][0]["message"]["content"]
+                return content.strip()
+            except Exception as e:
+                if attempt < MAX_RETRIES:
+                    logger.warning(f"LM Studio attempt {attempt+1} failed: {e}. Retrying...")
+                    time.sleep(RETRY_DELAY)
+                else:
+                    logger.error(f"LM Studio failed after {MAX_RETRIES+1} attempts: {e}")
+                    return ""
+
+    def generate_json(
+        self,
+        prompt: str,
+        system_prompt: str = "",
+        max_tokens: int = 1024,
+    ) -> dict[str, Any]:
+        """Generate and parse JSON output with retry."""
+        for attempt in range(MAX_RETRIES + 1):
+            raw = self.generate(prompt, system_prompt, max_tokens)
+            if not raw:
+                continue
+            result = _extract_json(raw)
+            if result:
+                return result
+            if attempt < MAX_RETRIES:
+                logger.info(f"JSON parse retry {attempt+1}: re-generating...")
+                time.sleep(RETRY_DELAY)
+        return {}
+
+    @property
+    def model_id(self) -> str:
+        return f"lmstudio:{self._get_model_name()}"
+
+    @property
+    def is_loaded(self) -> bool:
+        try:
+            models_url = self._api_url.replace("/chat/completions", "/models")
+            resp = requests.get(models_url, timeout=3)
+            return resp.status_code == 200
+        except Exception:
+            return False
+
+
+# ══════════════════════════════════════════════════════════════════════
+# MLX Provider (Fallback — direct Apple Silicon inference)
+# ══════════════════════════════════════════════════════════════════════
+
 class GemmaMLX:
-    """Wraps mlx-lm for Gemma inference. Implements the LLMProvider protocol.
+    """Wraps mlx-lm for Gemma inference on Apple Silicon.
 
     Features:
     - Lazy model loading with error handling
@@ -130,34 +227,33 @@ class GemmaMLX:
     ):
         self._model_id = model_id
         self._allow_remote_models = allow_remote_models
-        self._model: Any | None = None
-        self._tokenizer: Any | None = None
-        self._load_error: str | None = None
+        self._model = None
+        self._tokenizer = None
+        self._load_error = None
 
     def _ensure_loaded(self):
         if self._model is not None:
             return
         if self._load_error:
             raise RuntimeError(f"Model previously failed to load: {self._load_error}")
-        if not self._allow_remote_models and not _is_local_model_reference(self._model_id):
-            raise RuntimeError(
-                f"Remote model reference not allowed in current policy: {self._model_id}. "
-                "Use a local model path."
-            )
+        if not self._allow_remote_models and not Path(self._model_id).expanduser().exists():
+            raise RuntimeError(f"Remote model not allowed: {self._model_id}")
         try:
-            logger.info(f"Loading model: {self._model_id}")
+            from mlx_lm import load
+            logger.info(f"Loading MLX model: {self._model_id}")
             self._model, self._tokenizer = load(self._model_id)
-            logger.info(f"Model loaded: {self._model_id}")
+            logger.info(f"MLX model loaded: {self._model_id}")
         except Exception as e:
             self._load_error = str(e)
-            logger.error(f"Failed to load model {self._model_id}: {e}")
+            logger.error(f"Failed to load MLX model {self._model_id}: {e}")
             raise
 
     def generate(self, prompt: str, system_prompt: str = "", max_tokens: int = 1024) -> str:
         """Generate text with retry logic."""
         self._ensure_loaded()
+        from mlx_lm import generate as mlx_generate
 
-        messages: list[dict[str, str]] = []
+        messages = []
         if system_prompt:
             messages.append({"role": "system", "content": system_prompt})
         messages.append({"role": "user", "content": prompt})
@@ -168,7 +264,7 @@ class GemmaMLX:
 
         for attempt in range(MAX_RETRIES + 1):
             try:
-                response = generate(
+                response = mlx_generate(
                     self._model, self._tokenizer,
                     prompt=formatted,
                     max_tokens=max_tokens,
@@ -177,10 +273,10 @@ class GemmaMLX:
                 return response.strip()
             except Exception as e:
                 if attempt < MAX_RETRIES:
-                    logger.warning(f"Generation attempt {attempt+1} failed: {e}. Retrying...")
+                    logger.warning(f"MLX attempt {attempt+1} failed: {e}. Retrying...")
                     time.sleep(RETRY_DELAY)
                 else:
-                    logger.error(f"Generation failed after {MAX_RETRIES+1} attempts: {e}")
+                    logger.error(f"MLX failed after {MAX_RETRIES+1} attempts: {e}")
                     return ""
 
     def generate_json(
@@ -211,7 +307,40 @@ class GemmaMLX:
         return self._model is not None
 
 
-@lru_cache(maxsize=8)
-def get_model(model_id: str, allow_remote_models: bool = True) -> GemmaMLX:
-    """Factory — caches model instances so we don't reload."""
+# ══════════════════════════════════════════════════════════════════════
+# Factory — auto-selects best backend
+# ══════════════════════════════════════════════════════════════════════
+
+def get_model(
+    model_id: str = None,
+    backend: str = None,
+    allow_remote_models: bool = True,
+) -> GemmaLMStudio | GemmaMLX:
+    """Factory — returns the best available model provider.
+
+    Backend priority:
+      1. 'lmstudio' — if LM Studio is running, use it (fine-tuned model)
+      2. 'mlx' — fallback to direct MLX inference
+
+    Args:
+        model_id: Model identifier (HuggingFace ID or local path)
+        backend: Force 'lmstudio' or 'mlx'. None = auto-detect.
+        allow_remote_models: Whether MLX can download remote models.
+    """
+    if backend == "lmstudio" or (backend is None and _lmstudio_available()):
+        logger.info("Using LM Studio backend (fine-tuned Gemma 3 4B)")
+        return GemmaLMStudio()
+
+    model_id = model_id or "mlx-community/gemma-3-4b-it-4bit"
+    logger.info(f"Using MLX backend: {model_id}")
     return GemmaMLX(model_id, allow_remote_models=allow_remote_models)
+
+
+def _lmstudio_available() -> bool:
+    """Check if LM Studio is running and has a model loaded."""
+    try:
+        url = LM_STUDIO_URL.replace("/chat/completions", "/models")
+        resp = requests.get(url, timeout=2)
+        return resp.status_code == 200
+    except Exception:
+        return False

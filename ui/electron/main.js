@@ -1,13 +1,14 @@
 const { app, BrowserWindow, dialog } = require('electron');
 const path = require('path');
+const fs = require('fs');
 const { spawn } = require('child_process');
 const http = require('http');
 
 const HOST = '127.0.0.1';
 const PORT = Number(process.env.MEETMIND_PORT || 8765);
-const PYTHON_BIN = process.env.MEETMIND_PYTHON || 'python3';
 const ROOT_DIR = path.resolve(__dirname, '..', '..');
-const BACKEND_ENTRY = path.join(ROOT_DIR, 'backend', 'main.py');
+const VENV_PYTHON = path.join(ROOT_DIR, '.venv', 'bin', 'python');
+const PYTHON_BIN = process.env.MEETMIND_PYTHON || (fs.existsSync(VENV_PYTHON) ? VENV_PYTHON : 'python3');
 const AIR_GAPPED = process.env.MEETMIND_AIR_GAPPED === '1';
 
 let backendProcess = null;
@@ -50,7 +51,7 @@ async function waitForBackendReady(maxAttempts = 60) {
 }
 
 function startBackend() {
-  const args = [BACKEND_ENTRY, '--serve-dashboard', '--host', HOST, '--port', String(PORT)];
+  const args = ['-m', 'backend.main', '--serve-dashboard', '--host', HOST, '--port', String(PORT)];
   if (AIR_GAPPED) {
     args.push('--air-gapped', '--no-remote-models');
   }

@@ -1,6 +1,6 @@
 # MeetMind — Implementation Tracker
 
-## Current Status: Phase 2 Complete, Phase 3 Partial ✅
+## Current Status: Phase 3 Integration Implemented, Hardware Validation Pending ✅
 **Last Updated:** 2026-02-28 (evening)
 
 ---
@@ -113,15 +113,17 @@ meet-mind/
 - [x] Electron desktop app shell
 - [x] Consolidated UI under `ui/` and backend under `backend/`
 
-### Phase 3: Agent 1 (RoomScribe) 🔵 PARTIAL
+### Phase 3: Agent 1 (RoomScribe) 🟡 IMPLEMENTED, VALIDATION PENDING
 - [x] Camera capture module (OpenCV, configurable intervals)
 - [x] Microphone STT module (faster-whisper, chunked)
 - [x] Gemma 3n E4B vision-language OCR
 - [x] STT transcript refinement via model
 - [x] Standalone CLI with multiple input modes
-- [ ] **⚠️ NOT WIRED: RoomScribe → dashboard_server → MeetMind pipeline**
-- [ ] RoomScribe outputs Event objects, but nothing converts them to Perception objects
-- [ ] No live audio/video feed in the dashboard UI
+- [x] RoomScribe wired into dashboard_server via `RealtimeCaptureBridge`
+- [x] Event → Perception conversion implemented (OCR+STT aggregation)
+- [x] Live audio/video capture status streamed via SSE (`capture_status` events)
+- [x] `/api/start-capture`, `/api/stop-capture`, `/api/capture/status` endpoints added
+- [ ] Local hardware validation pending (camera/mic + model deps on target machine)
 
 ### Phase 4: Fine-Tuning ✅ COMPLETE
 - [x] Data generation: 165 examples, 7 actions, 5 domains, 30+ edge cases
@@ -129,8 +131,8 @@ meet-mind/
 - [x] GPU fine-tuning script (PyTorch/PEFT for NVIDIA)
 - [x] Fused model exported (0.77 GB)
 
-### Phase 5: Integration & Demo 🔴 NOT STARTED
-- [ ] Wire RoomScribe → Perception → MeetMind pipeline in dashboard_server
+### Phase 5: Integration & Demo 🔵 IN PROGRESS
+- [x] Wire RoomScribe → Perception → MeetMind pipeline in dashboard_server
 - [ ] End-to-end test: real camera + real mic → live dashboard
 - [ ] 3 demo scenarios with props
 - [ ] Demo script and pitch prep

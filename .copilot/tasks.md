@@ -53,15 +53,15 @@
 
 ---
 
-## 🔴 NOT DONE — Critical Integration Gap
+## 🟡 IN PROGRESS — Capture Integration Landed
 
 ### Integration: RoomScribe → MeetMind Pipeline
-- [ ] **Wire RoomScribe into dashboard_server** — RoomScribe outputs `Event` objects (kind=ocr/stt), but nothing converts them to `Perception` objects that MeetMind.process_perception() expects
-- [ ] Add a bridge: RoomScribe Event → Perception converter
-- [ ] Add `/api/start-capture` endpoint to start camera+mic in dashboard_server
-- [ ] Add live audio/video status indicators to dashboard HTML
-- [ ] End-to-end test: real camera + real mic → live dashboard updates
-- [ ] Handle edge cases: silence, empty board, rapid domain switches
+- [x] **Wire RoomScribe into dashboard_server** — RoomScribe events now flow into `MeetMind.process_perception()` via a real-time bridge
+- [x] Add a bridge: RoomScribe Event → Perception converter
+- [x] Add `/api/start-capture` endpoint to start camera+mic in dashboard_server
+- [x] Add live audio/video status indicators to dashboard HTML
+- [ ] End-to-end test: real camera + real mic → live dashboard updates (requires local hardware + model deps installed)
+- [x] Handle edge cases: silence, empty board, rapid domain switches
 - [ ] Performance tuning (target: <10s perception cycle)
 
 ### Demo Prep (Both Devs)
@@ -78,6 +78,6 @@
 
 | Blocker | Owner | Status |
 |---|---|---|
-| RoomScribe not wired to MeetMind pipeline | Dev 1 | 🔴 Critical |
+| Hardware validation for live camera/mic capture pending | Dev 1 | 🟡 Needs local run |
 | GPU VM has no internet access | Organizers | 🔄 Being fixed |
 | GPU VM has no sudo access | Organizers | 🔄 Being fixed |
