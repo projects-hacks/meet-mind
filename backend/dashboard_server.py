@@ -41,12 +41,8 @@ logger = logging.getLogger(__name__)
 
 class PerceptionPayload(BaseModel):
     timestamp: str
-    visual_text: list[str]
-    visual_content_type: str
-    visual_changed: bool
-    audio_transcript: str
-    audio_speech_detected: bool
-    raw_image_path: str | None = None
+    event_type: str
+    text: str
 
 
 class CaptureStartPayload(BaseModel):
@@ -460,11 +456,8 @@ def create_dashboard_app(config: ModelConfig | None = None) -> FastAPI:
         """Local test helper to drive dashboard without Agent 1 integration."""
         sample = Perception(
             timestamp=datetime.now().strftime("%H:%M:%S"),
-            visual_text=["API Gateway", "Auth Service", "PostgreSQL"],
-            visual_content_type="diagram",
-            visual_changed=True,
-            audio_transcript="Sarah will implement OAuth by Friday. We decided PostgreSQL over MongoDB.",
-            audio_speech_detected=True,
+            event_type="ocr",
+            text="API Gateway, Auth Service, PostgreSQL. Decision: use PostgreSQL over MongoDB.",
         )
         mm: MeetMind = app.state.meetmind
         hub: LocalEventHub = app.state.hub
