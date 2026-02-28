@@ -4,116 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MeetMind Local Dashboard</title>
-    <style>
-      :root {
-        --bg: #0b1020;
-        --panel: #131a2e;
-        --panel-2: #1a2340;
-        --text: #e8ecff;
-        --muted: #93a0c5;
-        --ok: #65d6a6;
-        --warn: #ffbe55;
-        --danger: #ff7a7a;
-        --accent: #8ea2ff;
-      }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif;
-        color: var(--text);
-        background: radial-gradient(circle at top left, #1a2350 0%, var(--bg) 35%);
-      }
-      header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 16px 20px;
-        border-bottom: 1px solid #29325b;
-        background: rgba(11, 16, 32, 0.75);
-        position: sticky;
-        top: 0;
-        backdrop-filter: blur(8px);
-      }
-      .badge {
-        background: #1f2a4e;
-        color: var(--ok);
-        border: 1px solid #33508f;
-        border-radius: 999px;
-        padding: 4px 10px;
-        font-size: 12px;
-      }
-      main {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 12px;
-        padding: 12px;
-      }
-      .card {
-        background: linear-gradient(180deg, var(--panel), var(--panel-2));
-        border: 1px solid #2b3767;
-        border-radius: 12px;
-        padding: 12px;
-        min-height: 180px;
-      }
-      h2 {
-        margin: 0 0 10px;
-        font-size: 14px;
-        color: var(--muted);
-        letter-spacing: 0.4px;
-        text-transform: uppercase;
-      }
-      pre, ul {
-        margin: 0;
-        padding-left: 18px;
-        font-size: 13px;
-        line-height: 1.45;
-      }
-      pre { white-space: pre-wrap; padding-left: 0; }
-      .full { grid-column: 1 / -1; }
-      .actions {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-      .status-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        display: inline-block;
-        margin-right: 6px;
-      }
-      .status-ok { background: var(--ok); }
-      .status-warn { background: var(--warn); }
-      .status-down { background: var(--danger); }
-      .status-idle { background: #7e8bb5; }
-      button {
-        background: #28386d;
-        color: var(--text);
-        border: 1px solid #3a54a0;
-        border-radius: 10px;
-        padding: 8px 10px;
-        cursor: pointer;
-        font-weight: 600;
-      }
-      button:hover { filter: brightness(1.1); }
-      .muted { color: var(--muted); }
-      @media (max-width: 980px) {
-        main { grid-template-columns: 1fr; }
-      }
-    </style>
+    <link rel="stylesheet" href="/assets/dashboard.css" />
   </head>
   <body>
     <header>
       <div>
-        <div><strong>MeetMind</strong> Local Dashboard</div>
-        <div id="meta" class="muted">Loading...</div>
-        <div class="muted"><span id="connDot" class="status-dot status-warn"></span><span id="connText">Connecting to local SSE...</span></div>
-          <div class="muted"><span id="captureDot" class="status-dot status-idle"></span><span id="captureText">Capture stopped</span></div>
+        <div class="title">MeetMind Local Dashboard</div>
+        <div id="meta" class="subtitle">Loading...</div>
+        <div class="status-row">
+          <div><span id="connDot" class="status-dot status-warn"></span><span id="connText">Connecting to local SSE...</span></div>
+          <div><span id="captureDot" class="status-dot status-idle"></span><span id="captureText">Capture stopped</span></div>
+        </div>
       </div>
       <div class="actions">
         <span class="badge">LOCAL · ON DEVICE</span>
-          <button id="startCaptureBtn">Start Capture (Mic + Cam)</button>
-          <button id="stopCaptureBtn">Stop Capture</button>
+        <button id="startCaptureBtn">Start Capture (Mic + Cam)</button>
+        <button id="stopCaptureBtn">Stop Capture</button>
         <button id="sampleBtn">Sample Perception</button>
         <button id="summaryBtn">Generate Summary</button>
         <button id="resetBtn">Reset Session</button>
@@ -121,267 +27,60 @@
     </header>
 
     <main>
-      <section class="card">
+      <section class="card span-4">
         <h2>System Health</h2>
         <pre id="health"></pre>
       </section>
-      <section class="card">
+      <section class="card span-4">
         <h2>Last Cycle Result</h2>
         <pre id="cycleResult"></pre>
       </section>
-      <section class="card">
+      <section class="card span-4">
         <h2>Capture Status (Audio/Video)</h2>
         <pre id="captureStatus"></pre>
       </section>
-      <section class="card">
+      <section class="card span-4">
         <h2>Key Points</h2>
         <ul id="keyPoints"></ul>
       </section>
-      <section class="card">
+      <section class="card span-4">
         <h2>Action Items</h2>
         <ul id="actionItems"></ul>
       </section>
-      <section class="card">
+      <section class="card span-4">
         <h2>Decisions</h2>
         <ul id="decisions"></ul>
       </section>
-      <section class="card">
+      <section class="card span-4">
         <h2>Gaps</h2>
         <ul id="gaps"></ul>
       </section>
-      <section class="card">
+      <section class="card span-4">
         <h2>Suggestions</h2>
         <ul id="suggestions"></ul>
       </section>
-      <section class="card">
+      <section class="card span-4">
         <h2>Insights</h2>
         <ul id="insights"></ul>
       </section>
-      <section class="card">
+      <section class="card span-6">
         <h2>Timeline</h2>
         <ul id="timeline"></ul>
       </section>
-      <section class="card">
+      <section class="card span-6">
         <h2>Whiteboard</h2>
         <pre id="whiteboard"></pre>
       </section>
-      <section class="card full">
+      <section class="card span-12">
         <h2>Artifact Viewer</h2>
         <ul id="artifacts"></ul>
       </section>
-      <section class="card full">
+      <section class="card span-12">
         <h2>Latest Generated Artifact Content</h2>
         <pre id="artifactContent" class="muted">No generated artifact content yet</pre>
       </section>
     </main>
 
-    <script>
-      const q = (id) => document.getElementById(id);
-      const api = {
-        summary: '/api/summary',
-        reset: '/api/reset',
-        sample: '/api/perceptions/sample',
-        health: '/api/health',
-        captureStatus: '/api/capture/status',
-        startCapture: '/api/start-capture',
-        stopCapture: '/api/stop-capture',
-        generateSummary: '/api/artifacts/meeting-summary',
-        stream: '/api/stream'
-      };
-
-      let eventSource = null;
-
-      function renderList(el, items, fmt) {
-        el.innerHTML = '';
-        if (!items || !items.length) {
-          el.innerHTML = '<li class="muted">No items yet</li>';
-          return;
-        }
-        for (const item of items) {
-          const li = document.createElement('li');
-          li.textContent = fmt ? fmt(item) : String(item);
-          el.appendChild(li);
-        }
-      }
-
-      function render(summary) {
-        const mode = summary.air_gapped ? 'AIR-GAPPED' : 'LOCAL';
-        const lastAction = summary.last_action?.action || 'none';
-        q('meta').textContent = `${summary.topic || 'Unknown'} · ${summary.domain || 'general'} · ${mode} · last action ${lastAction} · avg cycle ${summary.avg_cycle_time || 0}s`;
-        renderList(q('keyPoints'), summary.key_points || []);
-        renderList(q('actionItems'), summary.action_items || [], (a) => `${a.owner}: ${a.task} (${a.deadline})`);
-        renderList(q('decisions'), summary.decisions || [], (d) => d.decision);
-        renderList(q('gaps'), summary.gaps || [], (g) => `${g.topic} [${g.gap_type}]`);
-        renderList(q('suggestions'), summary.suggestions || [], (s) => s.replace(/^💡\s*/, ''));
-        renderList(q('insights'), summary.insights || [], (i) => i.replace(/^🔍\s*/, ''));
-        renderList(q('timeline'), summary.timeline || [], (t) => `${t.time || '--'} · ${t.content || ''}`);
-        q('whiteboard').textContent = summary.whiteboard || 'No whiteboard summary yet';
-        renderList(
-          q('artifacts'),
-          summary.artifacts || [],
-          (a) => `${a.type || 'artifact'} · ${a.status || 'pending'}${a.source ? ` · ${a.source}` : ''}${a.context ? ` · ${a.context}` : ''}`
-        );
-      }
-
-      function setConnection(connected) {
-        q('connDot').className = `status-dot ${connected ? 'status-ok' : 'status-down'}`;
-        q('connText').textContent = connected ? 'Local stream connected' : 'Local stream disconnected';
-      }
-
-      function setCaptureStatus(capture) {
-        const running = Boolean(capture?.running);
-        const audio = Boolean(capture?.audio_active);
-        const camera = Boolean(capture?.camera_active);
-        const hasError = Boolean(capture?.last_error);
-        const dotClass = hasError
-          ? 'status-down'
-          : running
-            ? 'status-ok'
-            : 'status-idle';
-
-        q('captureDot').className = `status-dot ${dotClass}`;
-        q('captureText').textContent = hasError
-          ? `Capture error: ${capture.last_error}`
-          : running
-            ? `Capture running · audio ${audio ? 'on' : 'off'} · camera ${camera ? 'on' : 'off'}`
-            : 'Capture stopped';
-
-        const payload = {
-          running,
-          camera_active: camera,
-          audio_active: audio,
-          model_id: capture?.model_id || '',
-          cycles: capture?.cycles || 0,
-          audio_chunks: capture?.audio_chunks || 0,
-          visual_events: capture?.visual_events || 0,
-          last_audio_ts: capture?.last_audio_ts || null,
-          last_visual_ts: capture?.last_visual_ts || null,
-          last_cycle_ts: capture?.last_cycle_ts || null,
-          last_error: capture?.last_error || '',
-        };
-        q('captureStatus').textContent = JSON.stringify(payload, null, 2);
-      }
-
-      async function fetchSummary() {
-        const res = await fetch(api.summary);
-        if (!res.ok) return;
-        render(await res.json());
-      }
-
-      async function fetchHealth() {
-        const res = await fetch(api.health);
-        if (!res.ok) return;
-        const data = await res.json();
-        q('health').textContent = JSON.stringify(data.health || {}, null, 2);
-        if (data.capture) {
-          setCaptureStatus(data.capture);
-        }
-      }
-
-      async function fetchCaptureStatus() {
-        const res = await fetch(api.captureStatus);
-        if (!res.ok) return;
-        const data = await res.json();
-        if (data.capture) {
-          setCaptureStatus(data.capture);
-        }
-      }
-
-      function connectSSE() {
-        if (eventSource) {
-          eventSource.close();
-        }
-
-        eventSource = new EventSource(api.stream);
-        eventSource.onopen = () => setConnection(true);
-        eventSource.onerror = () => {
-          setConnection(false);
-          setTimeout(connectSSE, 1500);
-        };
-
-        eventSource.addEventListener('summary', (evt) => {
-          try { render(JSON.parse(evt.data)); } catch (_) {}
-        });
-
-        eventSource.addEventListener('cycle_result', (evt) => {
-          try { q('cycleResult').textContent = JSON.stringify(JSON.parse(evt.data), null, 2); } catch (_) {}
-          fetchSummary();
-          fetchHealth();
-        });
-
-        eventSource.addEventListener('artifact', (evt) => {
-          try {
-            const a = JSON.parse(evt.data);
-            q('artifactContent').textContent = a.content || 'No artifact content';
-          } catch (_) {}
-          fetchSummary();
-        });
-
-        eventSource.addEventListener('capture_status', (evt) => {
-          try {
-            const status = JSON.parse(evt.data);
-            setCaptureStatus(status);
-          } catch (_) {}
-        });
-      }
-
-      q('resetBtn').addEventListener('click', async () => {
-        await fetch(api.reset, { method: 'POST' });
-        q('artifactContent').textContent = 'No generated artifact content yet';
-        q('cycleResult').textContent = '{}';
-        fetchHealth();
-      });
-
-      q('sampleBtn').addEventListener('click', async () => {
-        await fetch(api.sample, { method: 'POST' });
-      });
-
-      q('startCaptureBtn').addEventListener('click', async () => {
-        const res = await fetch(api.startCapture, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            camera_interval: 4.0,
-            stt_model: 'base',
-            stt_language: 'en',
-            stt_chunk_seconds: 3.0,
-            stt_sample_rate: 16000,
-            ignore_people: false,
-          }),
-        });
-        if (res.ok) {
-          const payload = await res.json();
-          if (payload.capture) {
-            setCaptureStatus(payload.capture);
-          }
-        }
-      });
-
-      q('stopCaptureBtn').addEventListener('click', async () => {
-        const res = await fetch(api.stopCapture, { method: 'POST' });
-        if (res.ok) {
-          const payload = await res.json();
-          if (payload.capture) {
-            setCaptureStatus(payload.capture);
-          }
-        }
-      });
-
-      q('summaryBtn').addEventListener('click', async () => {
-        const res = await fetch(api.generateSummary, { method: 'POST' });
-        if (res.ok) {
-          const payload = await res.json();
-          q('artifactContent').textContent = payload.content || 'No artifact content';
-          fetchSummary();
-        }
-      });
-
-      fetchSummary();
-      fetchHealth();
-      fetchCaptureStatus();
-      connectSSE();
-      setInterval(fetchHealth, 5000);
-      setInterval(fetchCaptureStatus, 4000);
-    </script>
+    <script src="/assets/dashboard.js"></script>
   </body>
 </html>
