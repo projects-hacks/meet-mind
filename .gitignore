@@ -1,7 +1,18 @@
+# Python
 .venv/
 __pycache__/
 *.egg-info/
-.DS_Store
 *.pyc
+
+# Node
 node_modules/
 npm-debug.log*
+
+# OS
+.DS_Store
+
+# Model outputs (large binary weights)
+outputs/
+
+# Runtime database
+data/meetmind.db
