@@ -5,9 +5,9 @@ import json
 import queue
 import threading
 
-from agents.roomscribe.agent import RoomScribeAgent
-from agents.roomscribe.config import AgentConfig
-from agents.roomscribe.sources import (
+from backend.agents.roomscribe.agent import RoomScribeAgent
+from backend.agents.roomscribe.config import AgentConfig
+from backend.agents.roomscribe.sources import (
     CameraOCRSource,
     MicrophoneSTTSource,
     SourceMessage,

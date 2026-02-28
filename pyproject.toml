@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.scripts]
-roomscribe = "agents.roomscribe.main:main"
+roomscribe = "backend.agents.roomscribe.main:main"
 
 [build-system]
 requires = ["setuptools>=68", "wheel"]

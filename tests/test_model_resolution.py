@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import Mock
 
-from agents.roomscribe.agent import resolve_model_id
-from agents.roomscribe.config import DEFAULT_MODEL_CANDIDATES, FALLBACK_MODEL
+from backend.agents.roomscribe.agent import resolve_model_id
+from backend.agents.roomscribe.config import DEFAULT_MODEL_CANDIDATES, FALLBACK_MODEL
 
 
 class ResolveModelIdTests(unittest.TestCase):

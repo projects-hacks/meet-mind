@@ -7,7 +7,7 @@ from typing import Any, Callable
 
 from PIL import Image
 
-from agents.roomscribe.config import AgentConfig
+from backend.agents.roomscribe.config import AgentConfig
 
 
 @dataclass(slots=True)
