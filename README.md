@@ -1,89 +1,49 @@
-# Meet Mind Agents (Prototype 1)
+# MeetMind (Local Desktop)
 
-Private, on-device meeting agent prototype:
-- real-time transcript ingestion (`stt` stream)
-- camera capture every 3-5 seconds (`ocr` stream)
-- one local Gemma model in MLX for text cleanup + image-to-text
+## Final structure
 
-First agent name: `RoomScribe`
+- **Backend (single place):** `backend/`
+- **UI + Electron (single place):** `ui/`
 
-## Why this version
+## Run Electron app
 
-This first milestone focuses on "model works end-to-end" with one Gemma model.
-It runs fully on-device with no cloud API calls.
-
-## Requirements
-
-- Apple Silicon Mac
-- Python 3.10+
-- Webcam
-- Microphone
-
-## Install
+### 1) Install Python dependencies
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -U pip
-pip install -e .
+cd backend
+pip install -r requirements.txt
 ```
 
-## Run
+### 2) Install UI/Electron dependencies
 
 ```bash
-roomscribe \
-  --camera-interval 4 \
-  --stt-source both \
-  --stt-model base \
-  --stt-language en \
-  --stt-chunk-seconds 3
+cd ../ui
+npm install
 ```
 
-The app:
-- listens to your device microphone with local offline STT
-- captures a camera frame every 3-5 seconds
-- uses one Gemma MLX model for transcript cleanup and image-to-text
-
-Optional strict model override:
+### 3) Start desktop app (local mode)
 
 ```bash
-roomscribe --model mlx-community/gemma-3n-e4b-it-4bit
+npm run electron
 ```
 
-Camera behavior option:
+### 4) Start desktop app (strict air-gapped mode)
 
 ```bash
-roomscribe --stt-source camera --ignore-people
+npm run electron:airgapped
 ```
 
-Microphone-only option:
+## Optional env vars
 
-```bash
-roomscribe --stt-source mic
-```
+- `MEETMIND_PYTHON` (default: `python3`)
+- `MEETMIND_PORT` (default: `8765`)
+- `MEETMIND_AIR_GAPPED=1`
 
-## Notes on STT
+## Quick UI cross-check checklist
 
-- STT is local via `faster-whisper` (no cloud API).
-- Fallback mode is available:
-
-```bash
-roomscribe --stt-source stdin
-```
-
-- First STT model load may download weights once, then runs locally.
-- Model selection default behavior:
-  - tries Gemma 3n E4B candidate IDs first
-  - falls back to `mlx-community/gemma-3-4b-it-4bit` if none can load
-  - first run downloads whichever selected model is not already cached
-
-## Privacy
-
-- no cloud endpoints in code
-- all inference local via MLX
-- suitable baseline for private company meetings and whiteboard discussions
-
-## Structure
-
-- `src/agents/roomscribe`: first agent implementation
-- future agents should be added as `src/agents/<agent_name>`
+1. Desktop window opens and loads dashboard (no blank page).
+2. Header shows local connection status turning green.
+3. Click **Sample Perception** → Key Points/Timeline/Last Cycle update.
+4. Click **Generate Summary** → Artifact Content panel updates.
+5. Click **Reset Session** → state clears and health still updates.
+6. In air-gapped mode, startup remains localhost-only.
