@@ -1,0 +1,14 @@
+{
+  "name": "meet-mind-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MeetMind local desktop dashboard",
+  "main": "electron/main.js",
+  "scripts": {
+    "electron": "electron .",
+    "electron:airgapped": "MEETMIND_AIR_GAPPED=1 electron ."
+  },
+  "devDependencies": {
+    "electron": "^33.2.0"
+  }
+}
