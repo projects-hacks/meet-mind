@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import asdict
 import json
 import queue
 import threading
@@ -14,6 +15,8 @@ from backend.agents.roomscribe.sources import (
     StdinSTTSource,
     next_message,
 )
+from backend.agents.scribe import ScribeBatcher
+from backend.core.config import MeetingState, Perception
 
 
 class OCRWorker:
@@ -121,6 +124,12 @@ def parse_args() -> argparse.Namespace:
         default=16000,
         help="Microphone sample rate",
     )
+    parser.add_argument(
+        "--batch-window-seconds",
+        type=float,
+        default=5.0,
+        help="Seconds to collect valid stt/ocr events before printing one batch.",
+    )
     return parser.parse_args()
 
 
@@ -139,6 +148,27 @@ def handle_message(msg: SourceMessage, agent: RoomScribeAgent | None = None) -> 
     return None
 
 
+def build_analyst_input(perceptions: list[Perception]) -> dict:
+    """Build a MeetingState-shaped payload for Agent 3 testing."""
+    state = MeetingState()
+    for p in perceptions:
+        if not p.has_content():
+            continue
+        if p.is_visual():
+            state.whiteboard_content = p.text
+            state.timeline.append(
+                {"time": p.timestamp[:5], "type": "visual", "content": p.text[:200]}
+            )
+            state.key_points.append(p.text[:150])
+        elif p.is_audio():
+            state.timeline.append(
+                {"time": p.timestamp[:5], "type": "verbal", "content": p.text[:200]}
+            )
+            state.key_points.append(p.text[:150])
+    state.trim_context()
+    return {"type": "analyst_input", "meeting_state": asdict(state)}
+
+
 def main() -> None:
     args = parse_args()
     cfg = AgentConfig(
@@ -150,6 +180,7 @@ def main() -> None:
     )
     agent = RoomScribeAgent(cfg) if args.stt_source in {"camera", "both"} else None
     ocr_worker = OCRWorker(agent) if agent is not None else None
+    batcher = ScribeBatcher(window_seconds=args.batch_window_seconds)
 
     msg_q: queue.Queue[SourceMessage] = queue.Queue()
     stt = None
@@ -179,6 +210,7 @@ def main() -> None:
         print(f"RoomScribe model selected: {agent.model_id}")
     else:
         print("RoomScribe stdin-only mode started. Type transcript chunks (`exit` to stop).")
+    print(f"Scribe batching active: every {args.batch_window_seconds:.1f}s")
     if stt is not None:
         stt.start()
     if cam is not None:
@@ -191,19 +223,55 @@ def main() -> None:
             if ocr_worker is not None:
                 ocr_out = ocr_worker.poll()
                 if ocr_out is not None:
-                    print(json.dumps(ocr_out, ensure_ascii=True))
+                    if ocr_out.get("type") == "error":
+                        print(json.dumps(ocr_out, ensure_ascii=True))
+                    else:
+                        print(
+                            json.dumps(
+                                {"type": "agent1_event", "event": ocr_out},
+                                ensure_ascii=True,
+                            )
+                        )
+                        batcher.add_event(ocr_out)
             msg = next_message(msg_q, timeout_seconds=0.5)
             if msg is None:
+                batch_out, perceptions = batcher.flush_due()
+                if batch_out is not None:
+                    print(json.dumps(batch_out, ensure_ascii=True))
+                    print(json.dumps(build_analyst_input(perceptions), ensure_ascii=True))
                 continue
             if msg.kind == "image" and ocr_worker is not None:
                 ocr_worker.submit(msg.payload)
+                batch_out, perceptions = batcher.flush_due()
+                if batch_out is not None:
+                    print(json.dumps(batch_out, ensure_ascii=True))
+                    print(json.dumps(build_analyst_input(perceptions), ensure_ascii=True))
                 continue
             out = handle_message(msg, agent=agent)
             if out is None:
+                batch_out, perceptions = batcher.flush_due()
+                if batch_out is not None:
+                    print(json.dumps(batch_out, ensure_ascii=True))
+                    print(json.dumps(build_analyst_input(perceptions), ensure_ascii=True))
                 continue
-            print(json.dumps(out, ensure_ascii=True))
+            if out.get("type") == "error":
+                print(json.dumps(out, ensure_ascii=True))
+            elif out.get("type") == "control":
+                print(json.dumps(out, ensure_ascii=True))
+            else:
+                print(
+                    json.dumps(
+                        {"type": "agent1_event", "event": out},
+                        ensure_ascii=True,
+                    )
+                )
+                batcher.add_event(out)
             if out.get("type") == "control" and out.get("text") == "shutdown":
                 break
+            batch_out, perceptions = batcher.flush_due()
+            if batch_out is not None:
+                print(json.dumps(batch_out, ensure_ascii=True))
+                print(json.dumps(build_analyst_input(perceptions), ensure_ascii=True))
     except KeyboardInterrupt:
         pass
     finally:

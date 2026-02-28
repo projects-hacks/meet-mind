@@ -13,6 +13,7 @@ Edge cases handled:
 
 import json
 import logging
+import time
 from dataclasses import asdict
 from difflib import SequenceMatcher
 
@@ -92,11 +93,12 @@ class Scribe:
             "current_whiteboard": self._state.whiteboard_content[:300],
         }
 
+        obs = perception.to_scribe_observation()
         new_observation = {
-            "visual_text": perception.visual_text[:20],  # Cap visual lines
-            "visual_content_type": perception.visual_content_type,
-            "visual_changed": perception.visual_changed,
-            "audio_transcript": perception.audio_transcript[:500],  # Cap transcript
+            "visual_text": obs["visual_text"][:20],  # Cap visual lines
+            "visual_content_type": obs["visual_content_type"],
+            "visual_changed": obs["visual_changed"],
+            "audio_transcript": str(obs["audio_transcript"])[:500],  # Cap transcript
         }
 
         return f"""Current meeting state:
@@ -160,3 +162,40 @@ Update the meeting log with any new information."""
     def to_dict(self) -> dict:
         """Serialize current state for dashboard/storage."""
         return asdict(self._state)
+
+
+class ScribeBatcher:
+    """Agent 2 runtime batcher for upstream events.
+
+    Collects valid RoomScribe events and emits a batch every fixed interval.
+    """
+
+    def __init__(self, window_seconds: float = 5.0):
+        self.window_seconds = window_seconds
+        self._batch: list[Perception] = []
+        self._window_started = time.monotonic()
+
+    def add_event(self, event: dict) -> None:
+        perception = Perception.from_agent1_event(event)
+        if perception is None:
+            return
+        self._batch.append(perception)
+
+    def flush_due(self) -> tuple[dict | None, list[Perception]]:
+        now = time.monotonic()
+        if now - self._window_started < self.window_seconds:
+            return None, []
+        if not self._batch:
+            self._window_started = now
+            return None, []
+
+        flushed = self._batch[:]
+        out = {
+            "type": "scribe_batch",
+            "window_seconds": self.window_seconds,
+            "event_count": len(flushed),
+            "events": [p.to_event_dict() for p in flushed],
+        }
+        self._batch = []
+        self._window_started = now
+        return out, flushed

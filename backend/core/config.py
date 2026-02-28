@@ -1,5 +1,6 @@
 """MeetMind configuration — single source of truth for all settings."""
 
+from datetime import datetime, timezone
 from dataclasses import dataclass, field
 from typing import Any, Protocol
 
@@ -10,25 +11,97 @@ from typing import Any, Protocol
 class Perception:
     """What Agent 1 (Perceiver) sends to Agent 2. This is the contract."""
     timestamp: str
-    visual_text: list[str]           # OCR'd text lines from whiteboard/paper
-    visual_content_type: str         # diagram | list | table | freeform | empty
-    visual_changed: bool             # Did the visual content change since last frame?
-    audio_transcript: str            # What was spoken (STT output)
-    audio_speech_detected: bool      # Was there meaningful speech?
-    raw_image_path: str | None = None  # Path to captured frame (optional)
+    event_type: str  # "ocr" | "stt_raw"
+    text: str
 
     def has_content(self) -> bool:
         """Check if this perception has any meaningful content."""
-        return self.audio_speech_detected or self.visual_changed
+        return bool(self.text.strip())
+
+    def is_visual(self) -> bool:
+        return self.event_type == "ocr"
+
+    def is_audio(self) -> bool:
+        return self.event_type == "stt_raw"
 
     def summary(self) -> str:
         """Short summary for logging."""
-        parts: list[str] = []
-        if self.visual_changed:
-            parts.append(f"visual({self.visual_content_type}: {len(self.visual_text)} lines)")
-        if self.audio_speech_detected:
-            parts.append(f"audio({len(self.audio_transcript)} chars)")
-        return " + ".join(parts) or "empty"
+        if self.is_visual():
+            return f"visual({len(self.text)} chars)"
+        if self.is_audio():
+            return f"audio({len(self.text)} chars)"
+        return "empty"
+
+    @staticmethod
+    def _infer_visual_content_type(text: str) -> str:
+        lowered = text.lower()
+        if any(token in lowered for token in ["->", "flow", "diagram", "architecture"]):
+            return "diagram"
+        if any(token in lowered for token in ["|", "table", "row", "column"]):
+            return "table"
+        if any(token in lowered for token in ["1.", "2.", "-", "*"]):
+            return "list"
+        return "freeform"
+
+    @classmethod
+    def from_agent1_event(cls, event: dict[str, Any]) -> "Perception | None":
+        """Convert current RoomScribe output event into Perception.
+
+        Supports:
+        - {"type": "stt_raw", "text": "..."}
+        - {"type": "ocr", "timestamp": "...", "text": "..."}
+        """
+        event_type = str(event.get("type", "")).strip()
+        text = str(event.get("text", "")).strip()
+        if event_type not in {"stt_raw", "ocr"} or not text:
+            return None
+
+        timestamp = str(event.get("timestamp", "")).strip()
+        if not timestamp:
+            timestamp = datetime.now(tz=timezone.utc).isoformat()
+
+        if event_type == "stt_raw":
+            return cls(
+                timestamp=timestamp,
+                event_type=event_type,
+                text=text,
+            )
+
+        return cls(
+            timestamp=timestamp,
+            event_type=event_type,
+            text=text,
+        )
+
+    def to_event_dict(self) -> dict[str, Any]:
+        """Compact serialized form for batching/debug output."""
+        visual_content_type = (
+            self._infer_visual_content_type(self.text) if self.is_visual() else "empty"
+        )
+        return {
+            "timestamp": self.timestamp,
+            "event_type": self.event_type,
+            "text": self.text,
+            "visual_content_type": visual_content_type,
+            "has_audio": self.is_audio(),
+            "has_visual": self.is_visual(),
+        }
+
+    def to_scribe_observation(self) -> dict[str, Any]:
+        """Canonical observation payload used by Scribe prompt construction."""
+        if self.is_audio():
+            return {
+                "visual_text": [],
+                "visual_content_type": "empty",
+                "visual_changed": False,
+                "audio_transcript": self.text,
+            }
+        return {
+            "visual_text": [self.text],
+            "visual_content_type": self._infer_visual_content_type(self.text),
+            "visual_changed": True,
+            "audio_transcript": "",
+        }
 
 
 @dataclass
