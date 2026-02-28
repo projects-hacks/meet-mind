@@ -22,6 +22,7 @@ import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from sse_starlette.sse import EventSourceResponse
 
@@ -278,22 +279,28 @@ class RealtimeCaptureBridge:
             if not audio_text and not visual_changed:
                 continue
 
-            visual_lines = [line.strip() for line in latest_visual.splitlines() if line.strip()]
-            if not visual_lines and latest_visual.strip():
-                visual_lines = [latest_visual.strip()]
+            ts = datetime.now().strftime("%H:%M:%S")
 
-            perception = Perception(
-                timestamp=datetime.now().strftime("%H:%M:%S"),
-                visual_text=visual_lines[:20],
-                visual_content_type=_guess_visual_content_type(latest_visual),
-                visual_changed=visual_changed,
-                audio_transcript=audio_text[:1000],
-                audio_speech_detected=bool(audio_text),
-            )
+            # Emit visual perception (OCR) if changed
+            if visual_changed and latest_visual.strip():
+                ocr_perception = Perception(
+                    timestamp=ts,
+                    event_type="ocr",
+                    text=latest_visual.strip(),
+                )
+                self._schedule_ingest(ocr_perception)
+
+            # Emit audio perception (STT) if present
+            if audio_text:
+                stt_perception = Perception(
+                    timestamp=ts,
+                    event_type="stt_raw",
+                    text=audio_text[:1000],
+                )
+                self._schedule_ingest(stt_perception)
+
             pending_audio = []
             visual_changed = False
-
-            self._schedule_ingest(perception)
 
     def _schedule_ingest(self, perception: Perception) -> None:
         if self._loop is None:
@@ -377,6 +384,9 @@ def create_dashboard_app(config: ModelConfig | None = None) -> FastAPI:
     _assert_local_policy(cfg)
 
     app = FastAPI(title="MeetMind Local Dashboard", version="0.1.0")
+    project_root = Path(__file__).resolve().parent.parent
+    dashboard_assets_dir = project_root / "ui" / "dashboard"
+    app.mount("/assets", StaticFiles(directory=str(dashboard_assets_dir)), name="dashboard-assets")
     app.state.cfg = cfg
     app.state.meetmind = MeetMind(cfg)
     app.state.hub = LocalEventHub()
