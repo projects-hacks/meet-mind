@@ -16,3 +16,5 @@ outputs/
 
 # Runtime database
 data/meetmind.db
+
+*.log

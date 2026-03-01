@@ -207,10 +207,10 @@ class RealtimeCaptureBridge:
                             with self._state_lock:
                                 self._visual_events += 1
                                 self._last_visual_ts = datetime.now().strftime("%H:%M:%S")
-                                if self._hub:
+                                if self._hub and hasattr(self, "_loop") and self._loop:
                                     asyncio.run_coroutine_threadsafe(
                                         self._hub.publish("raw_perception", {"type": "ocr", "text": text}),
-                                        self._main_loop
+                                        self._loop
                                     )
                             self._publish_status()
                         elif text:
@@ -232,10 +232,10 @@ class RealtimeCaptureBridge:
                         with self._state_lock:
                             self._audio_chunks += 1
                             self._last_audio_ts = datetime.now().strftime("%H:%M:%S")
-                            if self._hub:
+                            if self._hub and hasattr(self, "_loop") and self._loop:
                                 asyncio.run_coroutine_threadsafe(
                                     self._hub.publish("raw_perception", {"type": "stt", "text": text}),
-                                    self._main_loop
+                                    self._loop
                                 )
                         self._publish_status()
                 elif msg.kind == "error":
