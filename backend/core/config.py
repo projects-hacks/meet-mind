@@ -106,14 +106,15 @@ class Perception:
 
 @dataclass
 class ActionItem:
-    owner: str
-    task: str
-    deadline: str = "unspecified"
+    owner: str = ""
+    task: str = ""
+    deadline: str = ""
     priority: str = "medium"  # high | medium | low
 
     def key(self) -> str:
         """Unique key for deduplication."""
-        return f"{self.owner.lower().strip()}:{self.task.lower().strip()[:50]}"
+        own = self.owner.lower().strip() if self.owner else ""
+        return f"{own}:{self.task.lower().strip()[:50]}"
 
 
 @dataclass

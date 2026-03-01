@@ -13,3 +13,5 @@
 [backend] Using `use_fast=True` but `torchvision` is not available. Falling back to the slow image processor.
 [backend] 2026-02-28 17:59:12,297 [pipeline] INFO: Warming up VLM Camera Model on GPU... (this takes a moment)
 [backend] libc++abi: terminating due to uncaught exception of type std::runtime_error: [METAL] Command buffer execution failed: Insufficient Memory (00000008:kIOGPUCommandBufferCallbackErrorOutOfMemory)
+[backend] /opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/resource_tracker.py:301: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-vd5ix1p9'}
+  warnings.warn(

@@ -81,7 +81,12 @@ function render(summary) {
   }
 
   renderList(q('keyPoints'), summary.key_points || []);
-  renderList(q('actionItems'), summary.action_items || [], (a) => `${a.owner}: ${a.task} (${a.deadline})`);
+  renderList(q('actionItems'), summary.action_items || [], (a) => {
+    let str = a.task;
+    if (a.owner && a.owner.toLowerCase() !== "unassigned") str = `${a.owner}: ${str}`;
+    if (a.deadline && a.deadline.toLowerCase() !== "unspecified") str += ` (${a.deadline})`;
+    return str;
+  });
   renderList(q('decisions'), summary.decisions || [], (d) => d.decision);
   const gapItems = summary.gaps || [];
   const suggestionItems = summary.suggestions || [];
