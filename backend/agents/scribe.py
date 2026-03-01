@@ -26,11 +26,11 @@ SCRIBE_SYSTEM_PROMPT = """You are a meeting scribe. Given visual + audio observa
 
 Rules:
 - Only add NEW information, never repeat existing.
-- CRITICAL: If the new observation contains `visual_text`, YOU MUST extract and summarize it into the `whiteboard_content` string.
+- CRITICAL: If the `visual_text` field in the new observation is not empty, you MUST copy or summarize that text into the `whiteboard_content` JSON field. Do not leave it blank if vision text exists!
 - Keep all values SHORT (under 20 words each), except for whiteboard which can be longer.
 - Respond with ONLY valid JSON, no markdown fences:
 
-{"topic":"short topic","domain":"engineering|sales|operations|product|general","new_timeline_entry":{"time":"HH:MM","type":"visual|verbal|both","content":"brief description"},"whiteboard_content":"summarized text from camera/visual_text","new_key_points":["point1","point2"],"open_questions":["question1"]}"""
+{"topic":"short topic","domain":"engineering|sales|operations|product|general","new_timeline_entry":{"time":"HH:MM","type":"visual|verbal|both","content":"brief description"},"whiteboard_content":"new text from camera/visual_text","new_key_points":["point1","point2"],"open_questions":["question1"]}"""
 
 
 def _is_similar(a: str, b: str, threshold: float = 0.7) -> bool:
@@ -137,8 +137,11 @@ Update the meeting log with any new information."""
         # Whiteboard content
         wb = update.get("whiteboard_content")
         if isinstance(wb, str) and wb.strip():
-            self._state.whiteboard_content = wb.strip()[:1000]
-
+            if not self._state.whiteboard_content:
+                self._state.whiteboard_content = wb.strip()[:1000]
+            elif wb.strip() not in self._state.whiteboard_content:
+                self._state.whiteboard_content += f"\n- {wb.strip()}"
+                self._state.whiteboard_content = self._state.whiteboard_content[-2000:]
         # Timeline entry
         entry = update.get("new_timeline_entry")
         if isinstance(entry, dict) and entry.get("content"):

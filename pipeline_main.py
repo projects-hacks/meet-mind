@@ -355,6 +355,7 @@ def start_camera(
         cap = cv2.VideoCapture(0)
         if not cap.isOpened():
             log.warning("Camera not available — skipping.")
+            print("\n❌ CRITICAL: Camera unavailable or blocked by macOS permissions. Video stream is offline.\n")
             return
         log.info("Camera open (every %.1fs)", interval)
         try:
@@ -513,13 +514,7 @@ def run(args: argparse.Namespace):
         if hub:
             hub.publish("model_status", {"vlm": {"status": "loading", "model_id": vlm_cfg.model or "default"}})
         
-        try:
-            from PIL import Image
-            # Feed a dummy 1x1 image to trigger mlx_vlm.load() under the lock
-            vlm_agent.image_to_text(Image.new('RGB', (10, 10), color='black'))
-        except Exception as e:
-            log.warning("VLM warmup failed (will retry on first frame): %s", e)
-            
+        # Camera Thread Launch
         start_camera(pq, vlm_agent, stop, args.camera_interval)
         log.info("Camera ready (model=%s)", vlm_agent.model_id)
         if hub:
@@ -615,10 +610,20 @@ def run(args: argparse.Namespace):
         ocr_chunks = [ev["text"] for ev in clean if ev["event_type"] == "ocr"]
         
         batched = []
-        if stt_chunks:
-            batched.append({"timestamp": ts_now(), "event_type": "stt_raw", "text": " ".join(stt_chunks)})
-        if ocr_chunks:
-            batched.append({"timestamp": ts_now(), "event_type": "ocr", "text": " | ".join(ocr_chunks)})
+        has_valuable_stt = False
+        has_valuable_ocr = False
+        
+        stt_joined = " ".join(stt_chunks).strip()
+        ocr_joined = " | ".join(ocr_chunks).strip()
+        
+        # Don't waste LLM time on empty/tiny audio bursts or empty visual frames
+        if stt_joined and len(stt_joined.split()) > 2:
+            batched.append({"timestamp": ts_now(), "event_type": "stt_raw", "text": stt_joined})
+            has_valuable_stt = True
+            
+        if ocr_joined and "NO_MEETING_CONTENT" not in ocr_joined:
+            batched.append({"timestamp": ts_now(), "event_type": "ocr", "text": ocr_joined})
+            has_valuable_ocr = True
 
         for ev in batched:
             p = Perception(
@@ -645,15 +650,20 @@ def run(args: argparse.Namespace):
             hub.publish("summary", summary)
 
         # ── Analyst: decide action ──
-        try:
-            action = analyst.decide(state)
-        except Exception as exc:
-            log.warning("Analyst err: %s", exc)
-            action = {
-                "action": "continue_observing",
-                "params": {"reason": str(exc)},
-                "reasoning": "error",
-            }
+        # Skip analyst logic if nothing meaningful happened this cycle to save ~8 seconds
+        if not has_valuable_stt and not has_valuable_ocr:
+            log.info("Skipping Analyst generation (empty cycle)")
+            action = {"action": "continue_observing", "params": {"reason": "Not enough new context to analyze yet."}, "reasoning": "adaptive skip"}
+        else:
+            try:
+                action = analyst.decide(state)
+            except Exception as exc:
+                log.warning("Analyst err: %s", exc)
+                action = {
+                    "action": "continue_observing",
+                    "params": {"reason": str(exc)},
+                    "reasoning": "error",
+                }
 
         analyst.apply_action(action, state)
         slog.write(

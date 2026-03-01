@@ -88,28 +88,32 @@ def _parse_function_call(raw: str) -> JsonDict:
     except json.JSONDecodeError:
         pass
 
-    # Find JSON object anywhere in text
-    start = clean.find("{")
-    if start != -1:
-        depth = 0
-        for i in range(start, len(clean)):
-            if clean[i] == "{":
-                depth += 1
-            elif clean[i] == "}":
-                depth -= 1
-                if depth == 0:
-                    try:
-                        data = json.loads(clean[start:i + 1])
-                        return _normalize_json(data)
-                    except json.JSONDecodeError:
-                        break
+    # Find JSON object anywhere in text using regex
+    try:
+        # Match from first { to last }
+        json_match = re.search(r'(\{.*\})', clean, re.DOTALL)
+        if json_match:
+            data = json.loads(json_match.group(1))
+            return _normalize_json(data)
+    except json.JSONDecodeError:
+        pass
 
-    # Format 4: Bare function name
+    # Format 4: Bare function name / Heuristic extraction for insights
     text_lower = text.lower().replace(" ", "_").replace("-", "_")
     for name in VALID_ACTIONS:
         if name in text_lower:
-            logger.info(f"Matched bare function name: {name}")
-            return {"action": name, "params": {}, "reasoning": "Bare function name"}
+            params = {}
+            if name == "provide_insight":
+                # Try to salvage the actual text if it failed JSON parsing
+                insight_text = text
+                if "insight" in text_lower:
+                    try:
+                        insight_text = text.split("insight", 1)[1].strip().strip('":\',.').strip()
+                    except:
+                        pass
+                params = {"insight": insight_text[:200]}
+            logger.info(f"Matched bare function name with salvage: {name}")
+            return {"action": name, "params": params, "reasoning": "Bare function name"}
 
     return _fallback(f"Could not parse: {text[:150]}")
 
@@ -241,11 +245,28 @@ What is the single most important action to take now? If the team is discussing 
             })
 
         elif name == "provide_insight":
-            state.timeline.append({
-                "time": "agent",
-                "type": "insight",
-                "content": f"🔍 {params.get('insight', '')}",
-            })
+            insight_text = str(params.get("insight", "")).strip()
+            if not insight_text:
+                return state
+                
+            from difflib import SequenceMatcher
+            is_dup = False
+            for entry in state.timeline[-20:]:  
+                if entry.get("type") == "insight":
+                    existing = entry.get("content", "").replace("🔍 ", "")
+                    if SequenceMatcher(None, insight_text.lower(), existing.lower()).ratio() > 0.85:
+                        is_dup = True
+                        break
+            
+            if is_dup:
+                logger.info(f"Duplicate insight skipped: {insight_text[:50]}...")
+            else:
+                state.timeline.append({
+                    "time": "agent",
+                    "type": "insight",
+                    "content": f"🔍 {insight_text}",
+                })
+                logger.info(f"Insight provided: {insight_text[:50]}...")
 
         return state
 

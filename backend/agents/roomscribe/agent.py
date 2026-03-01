@@ -88,11 +88,13 @@ class RoomScribeAgent:
         cleaned = cleaned.replace("<end_of_image>", " ")
         cleaned = cleaned.replace("<image>", " ")
         cleaned = re.sub(
-            r"^(the most important (thing|element) in the image is|the most prominent element in the image is|the image shows|image description:)\s*",
+            r"^(the most important (thing|element) in the image is|the most prominent element in the image is|the image shows|image description:|a person holding a sign with handwritten text|the sign asks|a person holding a sign with|a person holding|the text says|the handwritten text says|it says)\s*",
             "",
             cleaned,
             flags=re.IGNORECASE,
         )
+        # Strip trailing conversational parts if it leaked
+        cleaned = re.sub(r'["\']', '', cleaned)
         cleaned = re.sub(r"\s+", " ", cleaned).strip()
         # Skip meaningless outputs that are mostly special-token artifacts.
         if not cleaned:
@@ -102,39 +104,19 @@ class RoomScribeAgent:
         return cleaned
 
     def _build_camera_prompt(self) -> str:
-        people_rule = (
-            "If the scene is mainly people and no meeting artifact is visible, "
-            "respond with exactly: NO_MEETING_CONTENT."
-            if self.cfg.ignore_people
-            else (
-                "If the scene is mainly people and no meeting artifact is visible, "
-                "briefly describe the person in one short line."
-            )
-        )
         return (
-            "You are a meeting-vision extractor. Return direct factual output only.\n"
-            "Priority order:\n"
-            "1) Whiteboard/paper/slides content\n"
-            "2) Drawings/diagrams/arrows/flows and what they mean\n"
-            "3) People only if no meeting artifact is visible\n\n"
-            f"{people_rule}\n\n"
-            "Output rules:\n"
-            "- Plain text only\n"
-            "- Keep it short (max 4 lines)\n"
-            "- Start directly with nouns/content; no preface\n"
-            "- Never write: 'the image shows', 'the most important', 'the most prominent'\n"
-            "- Do not output JSON/Markdown/code blocks\n"
-            "- Ignore camera noise, token artifacts, and UI junk\n\n"
-            "Example 1:\n"
-            "Input: whiteboard with text 'Q2 roadmap', arrows from API -> Mobile -> Billing\n"
-            "Output: Q2 roadmap. Flow: API -> Mobile -> Billing.\n\n"
-            "Example 2:\n"
-            "Input: person face only, no board or paper\n"
-            "Output: Person with glasses, facing camera.\n\n"
-            "Example 3:\n"
-            "Input: phone screen with Gmail inbox\n"
-            "Output: Gmail inbox, unread emails list visible.\n\n"
-            "Now analyze this frame."
+             "You are a strict, emotionless OCR text scanner. Return direct factual text output only.\n"
+             "RULES:\n"
+             "1. Read ANY and ALL text visible on screens, whiteboards, paper, or slides.\n"
+             "2. Describe any diagrams, charts, or flow arrows.\n"
+             "3. IGNORE PEOPLE ENTIRELY. Do not describe the room. Do not describe who is holding a paper.\n\n"
+             "CRITICAL CONSTRAINTS:\n"
+             "- Never hallucinate. If there is no legible text in the image, reply EXACTLY with: NO_MEETING_CONTENT\n"
+             "- Just output the exact text you see. Do not write conversational filler like 'A person holding a sign with handwritten text. The sign asks...'\n"
+             "- Keep it short (max 4 lines)\n"
+             "- Start directly with nouns/content; no preface\n"
+             "- Do not output JSON/Markdown/code blocks\n"
+             "Now scan this camera frame and output exactly what the text says."
         )
 
     def refine_stt(self, raw_text: str) -> Event:
