@@ -63,6 +63,19 @@ def _parse_function_call(raw: str) -> JsonDict:
         return _fallback("Empty model output")
 
     text = raw.strip()
+    text_lower = text.lower()
+    
+    # Defense against LLM prompt-echoing (repeating instructions instead of answering)
+    echo_phrases = [
+        "what is the single most important action",
+        "recent timeline:",
+        "consecutive observations without action",
+        "respond with ONLY the JSON object",
+        "respond with valid JSON",
+        "you MUST respond with valid JSON",
+    ]
+    if any(phrase.lower() in text_lower for phrase in echo_phrases):
+        return _fallback("Model hallucinated/echoed the prompt")
 
     # Format 1: FunctionGemma special tokens
     fc_match = re.search(r'call:(\w+)\{(.+?)\}', text)
@@ -98,22 +111,39 @@ def _parse_function_call(raw: str) -> JsonDict:
     except json.JSONDecodeError:
         pass
 
-    # Format 4: Bare function name / Heuristic extraction for insights
+    # Format 4: Bare function name / Heuristic extraction for ANY broken action
     text_lower = text.lower().replace(" ", "_").replace("-", "_")
     for name in VALID_ACTIONS:
         if name in text_lower:
+            # Relentlessly strip away broken JSON syntax to just leave the raw text content
+            salvaged = re.sub(r'(?i)"?action"?\s*:\s*"?' + name + r'"?,?', '', text)
+            salvaged = re.sub(r'(?i)"?(params|insight|suggestion|arguments|reasoning|task)"?\s*:\s*', '', salvaged)
+            salvaged = re.sub(r'[\{\}\[\]]', '', salvaged)  # Strip all curlies/brackets
+            salvaged = salvaged.replace('""', '"').strip(' ;,\n')
+            
+            # Strip leading/trailing string quotes that might be left over
+            if salvaged.startswith('"') and salvaged.endswith('"'):
+                salvaged = salvaged[1:-1]
+            if salvaged.startswith("'") and salvaged.endswith("'"):
+                salvaged = salvaged[1:-1]
+            salvaged = salvaged.strip()
+            
+            # If no content survived the purge, fallback to a sensible default string
+            if not salvaged:
+                salvaged = "No additional details provided."
+
             params = {}
             if name == "provide_insight":
-                # Try to salvage the actual text if it failed JSON parsing
-                insight_text = text
-                if "insight" in text_lower:
-                    try:
-                        insight_text = text.split("insight", 1)[1].strip().strip('":\',.').strip()
-                    except:
-                        pass
-                params = {"insight": insight_text[:200]}
-            logger.info(f"Matched bare function name with salvage: {name}")
-            return {"action": name, "params": params, "reasoning": "Bare function name"}
+                params = {"insight": salvaged[:300]}
+            elif name == "suggest_next_step":
+                params = {"suggestion": salvaged[:300]}
+            elif name == "extract_action_item":
+                params = {"task": salvaged[:300]}
+            elif name == "flag_gap":
+                params = {"topic": salvaged[:150], "suggestion": "Clarify this point"}
+                
+            logger.info(f"Salvaged broken JSON for {name}")
+            return {"action": name, "params": params, "reasoning": "Heuristic salvage"}
 
     return _fallback(f"Could not parse: {text[:150]}")
 
@@ -237,12 +267,28 @@ What is the single most important action to take now? If the team is discussing 
             logger.info(f"Artifact requested: {params.get('artifact_type')}")
 
         elif name == "suggest_next_step":
-            # Treated as a special timeline entry
-            state.timeline.append({
-                "time": "agent",
-                "type": "suggestion",
-                "content": f"💡 {params.get('suggestion', '')}",
-            })
+            suggestion_text = str(params.get("suggestion", "")).strip()
+            if not suggestion_text:
+                return state
+                
+            from difflib import SequenceMatcher
+            is_dup = False
+            for entry in state.timeline[-20:]:  
+                if entry.get("type") == "suggestion":
+                    existing = entry.get("content", "").replace("💡 ", "")
+                    if SequenceMatcher(None, suggestion_text.lower(), existing.lower()).ratio() > 0.85:
+                        is_dup = True
+                        break
+            
+            if is_dup:
+                logger.info(f"Duplicate suggestion skipped: {suggestion_text[:50]}...")
+            else:
+                state.timeline.append({
+                    "time": "agent",
+                    "type": "suggestion",
+                    "content": f"💡 {suggestion_text}",
+                })
+                logger.info(f"Suggestion provided: {suggestion_text[:50]}...")
 
         elif name == "provide_insight":
             insight_text = str(params.get("insight", "")).strip()

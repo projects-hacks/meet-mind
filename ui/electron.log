@@ -1,17 +1,17 @@
-[backend] 2026-02-28 18:24:38,185 [pipeline] INFO: Dashboard: http://127.0.0.1:8765
-2026-02-28 18:24:38,185 [pipeline] INFO: Loading text LLM…
-[backend] 2026-02-28 18:24:38,231 [pipeline] INFO: Warming up Text LLM on GPU...
-[backend] Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s][backend] Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 202950.19it/s]
-[backend] 2026-02-28 18:24:41,628 [pipeline] INFO: Text LLM ready
-2026-02-28 18:24:41,628 [pipeline] INFO: Starting mic (whisper-base, chunk=3.0s)…
-[backend] 2026-02-28 18:24:41,784 [pipeline] INFO: Mic ready
-2026-02-28 18:24:41,784 [pipeline] INFO: Loading VLM for camera…
-[backend] objc[78104]: Class AVFFrameReceiver is implemented in both /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/cv2/.dylibs/libavdevice.61.3.100.dylib (0x33b9203a8) and /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/av/.dylibs/libavdevice.62.1.100.dylib (0x342ee03a8). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
-[backend] objc[78104]: Class AVFAudioReceiver is implemented in both /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/cv2/.dylibs/libavdevice.61.3.100.dylib (0x33b9203f8) and /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/av/.dylibs/libavdevice.62.1.100.dylib (0x342ee03f8). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
-[backend] Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s][backend] Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 3243.44it/s][backend] 
+[backend] 2026-02-28 18:55:42,094 [pipeline] INFO: Dashboard: http://127.0.0.1:8765
+[backend] 2026-02-28 18:55:42,094 [pipeline] INFO: Loading text LLM…
+[backend] 2026-02-28 18:55:42,147 [pipeline] INFO: Warming up Text LLM on GPU...
+[backend] Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s][backend] Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 222706.41it/s]
+[backend] 2026-02-28 18:55:45,597 [pipeline] INFO: Text LLM ready
+2026-02-28 18:55:45,597 [pipeline] INFO: Starting mic (whisper-base, chunk=3.0s)…
+[backend] 2026-02-28 18:55:45,741 [pipeline] INFO: Mic ready
+2026-02-28 18:55:45,741 [pipeline] INFO: Loading VLM for camera…
+[backend] objc[3112]: Class AVFFrameReceiver is implemented in both /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/cv2/.dylibs/libavdevice.61.3.100.dylib (0x3367683a8) and /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/av/.dylibs/libavdevice.62.1.100.dylib (0x33dd283a8). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+[backend] objc[3112]: Class AVFAudioReceiver is implemented in both /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/cv2/.dylibs/libavdevice.61.3.100.dylib (0x3367683f8) and /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/av/.dylibs/libavdevice.62.1.100.dylib (0x33dd283f8). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+[backend] Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s][backend] Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 342392.16it/s]
 [backend] Using `use_fast=True` but `torchvision` is not available. Falling back to the slow image processor.
-[backend] 2026-02-28 18:24:46,838 [pipeline] INFO: Warming up VLM Camera Model on GPU... (this takes a moment)
-[backend] 2026-02-28 18:24:46,839 [pipeline] INFO: Camera ready (model=mlx-community/gemma-3n-e4b-it-4bit)
+[backend] 2026-02-28 18:55:50,843 [pipeline] INFO: Warming up VLM Camera Model on GPU... (this takes a moment)
+[backend] 2026-02-28 18:55:50,845 [pipeline] INFO: Camera ready (model=mlx-community/gemma-3n-e4b-it-4bit)
 [backend] 
 [backend] ============================================================
   MeetMind Pipeline — Live Demo
@@ -20,461 +20,316 @@
   Sources:  mic + camera
   Batch:    every 5.0s  |  Duration: unlimited
   Dashboard: http://127.0.0.1:8765
-  Log:      data/session_20260228_182438.jsonl
+  Log:      data/session_20260228_185541.jsonl
 ============================================================
   Listening… (Ctrl+C to stop)
 
-[backend] 2026-02-28 18:24:47,902 [pipeline] INFO: Camera open (every 5.0s)
-[backend]   [001] (no input)
-[backend]   [002] batch: 1 events (stt=1 ocr=0)
-        state:  topic=Unknown | domain=general | pts=0 acts=0 decs=0 gaps=0[backend] 
-[backend] 2026-02-28 18:24:56,854 [pipeline] INFO: Skipping Analyst generation (empty cycle)
-[backend]         action: continue_observing: Not enough new context to analyze yet.[backend] 
-[backend] 
-[backend]   [003] (no input)
-[backend]   [004] batch: 2 events (stt=2 ocr=0)
+[backend] 2026-02-28 18:55:52,338 [pipeline] INFO: Camera open (every 5.0s)
+[backend]   [001] batch: 1 events (stt=1 ocr=0)
 [backend]         state:  topic=Unknown | domain=general | pts=0 acts=0 decs=0 gaps=0
-[backend]         action: provide_insight: Proactively suggested solution to prevent future data errors  {"insight": "Before sending any data to the clock, decide on the single source of truth for the data. Without it, the cl…
+[backend]         action: provide_insight: Proactive suggestion: Meeting analyst can extract key decisions and action items  {"insight": "Based on the discussion so far, consider using a meeting analyst to extract key decisions and action items.…
 
-[backend]   [005] batch: 10 events (stt=9 ocr=1)
-[backend]         state:  topic=Unknown | domain=engineering | pts=0 acts=0 decs=0 gaps=0
-[backend]         action: provide_insight: Suggesting a single-source-of-truth database like Redis or Memcached for fast reads and writes. Thes  {"insight": "Based on the meeting content, consider using a single-source-of-truth database like Redis or Memcached for …
+[backend]   [002] batch: 7 events (stt=7 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=0 decs=0 gaps=0
+[backend]         action: provide_insight: Based on the discussion so far, consider using a meeting analyst to extract key decisions and action  {"suggestion": "Based on the discussion so far, consider using a meeting analyst to extract key decisions and action ite…
 
-[backend]   [006] batch: 8 events (stt=8 ocr=0)
-[backend]         state:  topic=Unknown | domain=engineering | pts=0 acts=0 decs=0 gaps=0
-[backend]         action: provide_insight: Based on the meeting content, consider using a single-source-of-truth database like Redis or Memcach  {"insight": "Based on the meeting content, consider using a single-source-of-truth database like Redis or Memcached for …
+[backend]   [003] batch: 1 events (stt=1 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=0 decs=0 gaps=0
+[backend]         action: suggest_next_step:   {"suggestion": "Based on the discussion so far, consider using a meeting analyst to extract key decisions and action ite…
 
-[backend]   [007] batch: 1 events (stt=1 ocr=0)
-[backend]         state:  topic=Unknown | domain=engineering | pts=0 acts=0 decs=0 gaps=0
-[backend]         action: provide_insight: Based on the meeting content, consider using a single-source-of-truth database like Redis or Memcach  {"insight": "Based on the meeting content, consider using a single-source-of-truth database like Redis or Memcached for …
+[backend]   [004] batch: 3 events (stt=3 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=0 decs=0 gaps=0[backend] 
+[backend]         action: suggest_next_step:   {"suggestion": "Based on the discussion so far, consider using a meeting analyst to extract key decisions and action ite…
 
-[backend] Traceback (most recent call last):
-[backend]   File "/Users/maverickrajeev/Documents/projects/meet-mind/pipeline_main.py", line 778, in <module>
-    main()
-    ~~~~^^
-[backend]   File "/Users/maverickrajeev/Documents/projects/meet-mind/pipeline_main.py", line 774, in main
-    run(args)
-    ~~~^^^^^^
-  File "/Users/maverickrajeev/Documents/projects/meet-mind/pipeline_main.py", line 561, in run
-    from backend.core.meeting_state import MeetingState
-ModuleNotFoundError: No module named 'backend.core.meeting_state'
-[backend] ERROR:    Exception in ASGI application
-  + Exception Group Traceback (most recent call last):
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/uvicorn/protocols/http/httptools_impl.py", line 416, in run_asgi
-  |     result = await app(  # type: ignore[func-returns-value]
-  |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  |         self.scope, self.receive, self.send
-  |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  |     )
-  |     ^
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
-  |     return await self.app(scope, receive, send)
-  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/applications.py", line 1160, in __call__
-  |     await super().__call__(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/applications.py", line 107, in __call__
-  |     await self.middleware_stack(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 186, in __call__
-  |     raise exc
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 164, in __call__
-  |     await self.app(scope, receive, _send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
-  |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-  |     raise exc
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-  |     await app(scope, receive, sender)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
-  |     await self.app(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/routing.py", line 716, in __call__
-  |     await self.middleware_stack(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/routing.py", line 736, in app
-  |     await route.handle(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/routing.py", line 290, in handle
-  |     await self.app(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/routing.py", line 122, in app
-  |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-  |     raise exc
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-  |     await app(scope, receive, sender)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/routing.py", line 109, in app
-  |     await response(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/sse_starlette/sse.py", line 416, in __call__
-  |     async with anyio.create_task_group() as task_group:
-  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 783, in __aexit__
-  |     raise BaseExceptionGroup(
-  |         "unhandled errors in a TaskGroup", self._exceptions
-  |     ) from None
-  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
-  +-+---------------- 1 ----------------
-    | Traceback (most recent call last):
-    |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/sse_starlette/sse.py", line 419, in cancel_on_finish
-    |     await coro()
-    |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/sse_starlette/sse.py", line 313, in _stream_response
-    |     async for data in self.body_iterator:
-    |     ...<11 lines>...
-    |             raise SendTimeoutError()
-    |   File "/Users/maverickrajeev/Documents/projects/meet-mind/pipeline_main.py", line 275, in generator
-    |     msg = await asyncio.get_event_loop().run_in_executor(
-    |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
-    |         None, lambda: client_q.get(timeout=2.0)
-    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    |     )
-    |     ^
-    |   File "uvloop/loop.pyx", line 2747, in uvloop.loop.Loop.run_in_executor
-    |   File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/concurrent/futures/thread.py", line 171, in submit
-    |     raise RuntimeError('cannot schedule new futures after shutdown')
-    | RuntimeError: cannot schedule new futures after shutdown
-    +------------------------------------
-[backend] ERROR:    Exception in ASGI application
-  + Exception Group Traceback (most recent call last):
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/uvicorn/protocols/http/httptools_impl.py", line 416, in run_asgi
-  |     result = await app(  # type: ignore[func-returns-value]
-  |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  |         self.scope, self.receive, self.send
-  |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  |     )
-  |     ^
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
-  |     return await self.app(scope, receive, send)
-  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/applications.py", line 1160, in __call__
-  |     await super().__call__(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/applications.py", line 107, in __call__
-  |     await self.middleware_stack(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 186, in __call__
-  |     raise exc
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 164, in __call__
-  |     await self.app(scope, receive, _send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
-  |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-  |     raise exc
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-  |     await app(scope, receive, sender)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
-  |     await self.app(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/routing.py", line 716, in __call__
-  |     await self.middleware_stack(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/routing.py", line 736, in app
-  |     await route.handle(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/routing.py", line 290, in handle
-  |     await self.app(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/routing.py", line 122, in app
-  |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-  |     raise exc
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-  |     await app(scope, receive, sender)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/routing.py", line 109, in app
-  |     await response(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/sse_starlette/sse.py", line 416, in __call__
-  |     async with anyio.create_task_group() as task_group:
-  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 783, in __aexit__
-  |     raise BaseExceptionGroup(
-  |         "unhandled errors in a TaskGroup", self._exceptions
-  |     ) from None
-  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
-  +-+---------------- 1 ----------------
-    | Traceback (most recent call last):
-    |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/sse_starlette/sse.py", line 419, in cancel_on_finish
-    |     await coro()
-    |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/sse_starlette/sse.py", line 313, in _stream_response
-    |     async for data in self.body_iterator:
-    |     ...<11 lines>...
-    |             raise SendTimeoutError()
-    |   File "/Users/maverickrajeev/Documents/projects/meet-mind/pipeline_main.py", line 275, in generator
-    |     msg = await asyncio.get_event_loop().run_in_executor(
-    |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
-    |         None, lambda: client_q.get(timeout=2.0)
-    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    |     )
-    |     ^
-    |   File "uvloop/loop.pyx", line 2747, in uvloop.loop.Loop.run_in_executor
-    |   File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/concurrent/futures/thread.py", line 171, in submit
-    |     raise RuntimeError('cannot schedule new futures after shutdown')
-    | RuntimeError: cannot schedule new futures after shutdown
-    +------------------------------------
-[backend] ERROR:    Exception in ASGI application
-  + Exception Group Traceback (most recent call last):
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/uvicorn/protocols/http/httptools_impl.py", line 416, in run_asgi
-  |     result = await app(  # type: ignore[func-returns-value]
-  |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  |         self.scope, self.receive, self.send
-  |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  |     )
-  |     ^
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
-  |     return await self.app(scope, receive, send)
-  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/applications.py", line 1160, in __call__
-  |     await super().__call__(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/applications.py", line 107, in __call__
-  |     await self.middleware_stack(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 186, in __call__
-  |     raise exc
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 164, in __call__
-  |     await self.app(scope, receive, _send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
-  |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-  |     raise exc
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-  |     await app(scope, receive, sender)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
-  |     await self.app(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/routing.py", line 716, in __call__
-  |     await self.middleware_stack(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/routing.py", line 736, in app
-  |     await route.handle(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/routing.py", line 290, in handle
-  |     await self.app(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/routing.py", line 122, in app
-  |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-  |     raise exc
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-  |     await app(scope, receive, sender)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/routing.py", line 109, in app
-  |     await response(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/sse_starlette/sse.py", line 416, in __call__
-  |     async with anyio.create_task_group() as task_group:
-  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 783, in __aexit__
-  |     raise BaseExceptionGroup(
-  |         "unhandled errors in a TaskGroup", self._exceptions
-  |     ) from None
-  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
-  +-+---------------- 1 ----------------
-    | Traceback (most recent call last):
-    |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/sse_starlette/sse.py", line 419, in cancel_on_finish
-    |     await coro()
-    |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/sse_starlette/sse.py", line 313, in _stream_response
-    |     async for data in self.body_iterator:
-    |     ...<11 lines>...
-    |             raise SendTimeoutError()
-    |   File "/Users/maverickrajeev/Documents/projects/meet-mind/pipeline_main.py", line 275, in generator
-    |     msg = await asyncio.get_event_loop().run_in_executor(
-    |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
-    |         None, lambda: client_q.get(timeout=2.0)
-    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    |     )
-    |     ^
-    |   File "uvloop/loop.pyx", line 2747, in uvloop.loop.Loop.run_in_executor
-    |   File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/concurrent/futures/thread.py", line 171, in submit
-    |     raise RuntimeError('cannot schedule new futures after shutdown')
-    | RuntimeError: cannot schedule new futures after shutdown
-    +------------------------------------
-[backend] ERROR:    Exception in ASGI application
-  + Exception Group Traceback (most recent call last):
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/uvicorn/protocols/http/httptools_impl.py", line 416, in run_asgi
-  |     result = await app(  # type: ignore[func-returns-value]
-  |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  |         self.scope, self.receive, self.send
-  |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  |     )
-  |     ^
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
-  |     return await self.app(scope, receive, send)
-  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/applications.py", line 1160, in __call__
-  |     await super().__call__(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/applications.py", line 107, in __call__
-  |     await self.middleware_stack(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 186, in __call__
-  |     raise exc
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 164, in __call__
-  |     await self.app(scope, receive, _send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
-  |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-  |     raise exc
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-  |     await app(scope, receive, sender)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
-  |     await self.app(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/routing.py", line 716, in __call__
-  |     await self.middleware_stack(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/routing.py", line 736, in app
-  |     await route.handle(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/routing.py", line 290, in handle
-  |     await self.app(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/routing.py", line 122, in app
-  |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-  |     raise exc
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-  |     await app(scope, receive, sender)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/routing.py", line 109, in app
-  |     await response(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/sse_starlette/sse.py", line 416, in __call__
-  |     async with anyio.create_task_group() as task_group:
-  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 783, in __aexit__
-  |     raise BaseExceptionGroup(
-  |         "unhandled errors in a TaskGroup", self._exceptions
-  |     ) from None
-  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
-  +-+---------------- 1 ----------------
-    | Traceback (most recent call last):
-    |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/sse_starlette/sse.py", line 419, in cancel_on_finish
-    |     await coro()
-    |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/sse_starlette/sse.py", line 313, in _stream_response
-    |     async for data in self.body_iterator:
-    |     ...<11 lines>...
-    |             raise SendTimeoutError()
-    |   File "/Users/maverickrajeev/Documents/projects/meet-mind/pipeline_main.py", line 275, in generator
-    |     msg = await asyncio.get_event_loop().run_in_executor(
-    |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
-    |         None, lambda: client_q.get(timeout=2.0)
-    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    |     )
-    |     ^
-    |   File "uvloop/loop.pyx", line 2747, in uvloop.loop.Loop.run_in_executor
-    |   File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/concurrent/futures/thread.py", line 171, in submit
-    |     raise RuntimeError('cannot schedule new futures after shutdown')
-    | RuntimeError: cannot schedule new futures after shutdown
-    +------------------------------------
-[backend] ERROR:    Exception in ASGI application
-  + Exception Group Traceback (most recent call last):
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/uvicorn/protocols/http/httptools_impl.py", line 416, in run_asgi
-  |     result = await app(  # type: ignore[func-returns-value]
-  |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  |         self.scope, self.receive, self.send
-  |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  |     )
-  |     ^
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
-  |     return await self.app(scope, receive, send)
-  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/applications.py", line 1160, in __call__
-  |     await super().__call__(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/applications.py", line 107, in __call__
-  |     await self.middleware_stack(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 186, in __call__
-  |     raise exc
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 164, in __call__
-  |     await self.app(scope, receive, _send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
-  |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-  |     raise exc
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-  |     await app(scope, receive, sender)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
-  |     await self.app(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/routing.py", line 716, in __call__
-  |     await self.middleware_stack(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/routing.py", line 736, in app
-  |     await route.handle(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/routing.py", line 290, in handle
-  |     await self.app(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/routing.py", line 122, in app
-  |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-  |     raise exc
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-  |     await app(scope, receive, sender)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/routing.py", line 109, in app
-  |     await response(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/sse_starlette/sse.py", line 416, in __call__
-  |     async with anyio.create_task_group() as task_group:
-  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 783, in __aexit__
-  |     raise BaseExceptionGroup(
-  |         "unhandled errors in a TaskGroup", self._exceptions
-  |     ) from None
-  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
-  +-+---------------- 1 ----------------
-    | Traceback (most recent call last):
-    |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/sse_starlette/sse.py", line 419, in cancel_on_finish
-    |     await coro()
-    |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/sse_starlette/sse.py", line 313, in _stream_response
-    |     async for data in self.body_iterator:
-    |     ...<11 lines>...
-    |             raise SendTimeoutError()
-    |   File "/Users/maverickrajeev/Documents/projects/meet-mind/pipeline_main.py", line 275, in generator
-    |     msg = await asyncio.get_event_loop().run_in_executor(
-    |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
-    |         None, lambda: client_q.get(timeout=2.0)
-    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    |     )
-    |     ^
-    |   File "uvloop/loop.pyx", line 2747, in uvloop.loop.Loop.run_in_executor
-    |   File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/concurrent/futures/thread.py", line 171, in submit
-    |     raise RuntimeError('cannot schedule new futures after shutdown')
-    | RuntimeError: cannot schedule new futures after shutdown
-    +------------------------------------
-[backend] ERROR:    Exception in ASGI application
-  + Exception Group Traceback (most recent call last):
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/uvicorn/protocols/http/httptools_impl.py", line 416, in run_asgi
-  |     result = await app(  # type: ignore[func-returns-value]
-  |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  |         self.scope, self.receive, self.send
-  |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  |     )
-  |     ^
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
-  |     return await self.app(scope, receive, send)
-  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/applications.py", line 1160, in __call__
-  |     await super().__call__(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/applications.py", line 107, in __call__
-  |     await self.middleware_stack(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 186, in __call__
-  |     raise exc
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 164, in __call__
-  |     await self.app(scope, receive, _send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
-  |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-  |     raise exc
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-  |     await app(scope, receive, sender)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
-  |     await self.app(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/routing.py", line 716, in __call__
-  |     await self.middleware_stack(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/routing.py", line 736, in app
-  |     await route.handle(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/routing.py", line 290, in handle
-  |     await self.app(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/routing.py", line 122, in app
-  |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-  |     raise exc
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-  |     await app(scope, receive, sender)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/fastapi/routing.py", line 109, in app
-  |     await response(scope, receive, send)
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/sse_starlette/sse.py", line 416, in __call__
-  |     async with anyio.create_task_group() as task_group:
-  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
-  |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 783, in __aexit__
-  |     raise BaseExceptionGroup(
-  |         "unhandled errors in a TaskGroup", self._exceptions
-  |     ) from None
-  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
-  +-+---------------- 1 ----------------
-    | Traceback (most recent call last):
-    |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/sse_starlette/sse.py", line 419, in cancel_on_finish
-    |     await coro()
-    |   File "/Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/sse_starlette/sse.py", line 313, in _stream_response
-    |     async for data in self.body_iterator:
-    |     ...<11 lines>...
-    |             raise SendTimeoutError()
-    |   File "/Users/maverickrajeev/Documents/projects/meet-mind/pipeline_main.py", line 275, in generator
-    |     msg = await asyncio.get_event_loop().run_in_executor(
-    |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
-    |         None, lambda: client_q.get(timeout=2.0)
-    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    |     )
-    |     ^
-    |   File "uvloop/loop.pyx", line 2747, in uvloop.loop.Loop.run_in_executor
-    |   File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/concurrent/futures/thread.py", line 171, in submit
-    |     raise RuntimeError('cannot schedule new futures after shutdown')
-    | RuntimeError: cannot schedule new futures after shutdown
-    +------------------------------------
+[backend]   [005] batch: 1 events (stt=1 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=0 decs=0 gaps=0
+[backend]         action: log_decision: Heuristic salvage  {}
+
+[backend]   [006] (1 dup)
+[backend]   [007] batch: 3 events (stt=3 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=0 decs=0 gaps=0[backend] 
+[backend]         action: provide_insight: Based on the discussion so far, consider using a meeting analyst to extract key decisions and action  {"insight": "Based on the discussion so far, consider using a meeting analyst to extract key decisions and action items.…
+
+[backend]   [008] batch: 5 events (stt=5 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=0 decs=0 gaps=0
+[backend]         action: provide_insight: Based on the discussion so far, consider using a meeting analyst to extract key decisions and action  {"insight": "Based on the discussion so far, consider using a meeting analyst to extract key decisions and action items.…
+
+[backend]   [009] batch: 4 events (stt=4 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=0 decs=0 gaps=0
+[backend]         action: log_decision: Heuristic salvage  {}
+
+[backend]   [010] batch: 3 events (stt=3 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=0 decs=0 gaps=0
+[backend]         action: provide_insight: Based on the discussion so far, consider using a meeting analyst to extract key decisions and action  {"insight": "Based on the discussion so far, consider using a meeting analyst to extract key decisions and action items.…
+
+[backend]   [011] batch: 3 events (stt=3 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=0 decs=0 gaps=0
+[backend]         action: extract_action_item: Heuristic salvage  {"task": "action\": \"provide_insight\", \"Based on the discussion so far, consider using a meeting analyst to extract k…
+
+[backend]   [012] batch: 2 events (stt=2 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: provide_insight: Team is not focused: Reviewing meeting state  {"suggestion": "Review the meeting state: 1 actions, 0 decisions, 0 gaps; Team: 2 people; Domain: general", "category": …[backend] 
+[backend] 
+[backend]   [013] batch: 2 events (stt=2 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0[backend] 
+[backend]         action: provide_insight: Team is frustrated about not being able to see the team and uncertainty about credit  {"insight": "Team is frustrated about not being able to see the team and uncertainty about credit. Suggest: Send a meeti…
+
+[backend]   [014] (no input)
+[backend]   [015] (no input)
+[backend]   [016] (no input)
+[backend]   [017] (no input)
+[backend]   [018] (no input)
+[backend]   [019] batch: 1 events (stt=1 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: suggest_next_step: Propose meeting with legal to discuss credit policy and decide on a policy by end of week  {"suggestion": "Propose a meeting with legal to discuss credit policy and decide on a policy by end of week", "reason": …
+
+[backend]   [020] batch: 2 events (stt=2 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: suggest_next_step: Proactive: Meeting with legal to discuss credit policy and decide on a policy by end of week  {"suggestion": "Propose a meeting with legal to discuss credit policy and decide on a policy by end of week", "reason": …
+
+[backend]   [021] batch: 1 events (stt=1 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: suggest_next_step: Propose a meeting with legal to discuss credit policy and decide on a policy by end of week  {"suggestion": "Propose a meeting with legal to discuss credit policy and decide on a policy by end of week", "reason": …
+
+[backend]   [022] (1 dup)
+[backend]   [023] (1 dup)
+[backend]   [024] (no input)
+[backend]   [025] (no input)
+[backend]   [026] (no input)
+[backend]   [027] (1 dup)
+[backend]   [028] (no input)
+[backend]   [029] (no input)
+[backend]   [030] (no input)
+[backend]   [031] (no input)
+[backend]   [032] (no input)
+[backend]   [033] (no input)
+[backend]   [034] (no input)
+[backend]   [035] (no input)
+[backend]   [036] batch: 1 events (stt=1 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: suggest_next_step: Review the current credit policy and decide on a policy by end of week  {"suggestion": "Review the current credit policy and decide on a policy by end of week", "reason": "Review the current c…
+
+[backend]   [037] batch: 1 events (stt=1 ocr=0)[backend] 
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: suggest_next_step: Review the current credit policy and decide on a policy by end of week  {"suggestion": "Review the current credit policy and decide on a policy by end of week", "reason": "Review the current c…
+
+[backend]   [038] batch: 1 events (stt=1 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0[backend] 
+[backend]         action: provide_insight: Review the current credit policy and decide on a policy by end of week. Review the current credit po  {"insight": "Review the current credit policy and decide on a policy by end of week. Review the current credit policy an…[backend] 
+
+[backend]   [039] batch: 2 events (stt=2 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: provide_insight: Team is discussing a problem: Review the current credit policy and decide on a policy by end of week  {"suggestion": "Review the current credit policy and decide on a policy by end of week. Review the current credit policy…
+
+[backend]   [040] (no input)
+[backend]   [041] batch: 1 events (stt=1 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: provide_insight: Team is discussing a problem: Review the current credit policy and decide on a policy by end of week  {"suggestion": "Review the current credit policy and decide on a policy by end of week. Review the current credit policy…[backend] 
+
+[backend]   [042] (no input)
+[backend]   [043] (no input)
+[backend]   [044] (no input)
+[backend]   [045] (no input)
+[backend]   [046] (no input)
+[backend]   [047] (no input)
+[backend]   [048] (no input)
+[backend]   [049] (no input)
+[backend]   [050] (no input)
+[backend]   [051] (no input)
+[backend]   [052] (no input)
+[backend]   [053] (no input)
+[backend]   [054] (no input)
+[backend]   [055] (no input)
+[backend]   [056] (no input)
+[backend]   [057] (no input)
+[backend]   [058] (no input)
+[backend]   [059] (no input)
+[backend]   [060] (no input)
+[backend]   [061] (no input)
+[backend]   [062] (no input)
+[backend]   [063] (no input)
+[backend]   [064] (no input)
+[backend]   [065] (no input)
+[backend]   [066] (no input)
+[backend]   [067] (no input)
+[backend]   [068] (no input)
+[backend]   [069] (no input)
+[backend]   [070] (no input)
+[backend]   [071] (no input)
+[backend]   [072] (no input)
+[backend]   [073] (no input)
+[backend]   [074] (no input)
+[backend]   [075] (no input)
+[backend]   [076] (no input)
+[backend]   [077] (no input)
+[backend]   [078] (no input)
+[backend]   [079] (no input)
+[backend]   [080] (no input)
+[backend]   [081] batch: 1 events (stt=1 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: provide_insight: Team is discussing a problem: Review the current credit policy and decide on a policy by end of week  {"insight": "Review the current credit policy and decide on a policy by end of week. Review the current credit policy an…
+
+[backend]   [082] (no input)
+[backend]   [083] (no input)
+[backend]   [084] (no input)
+[backend]   [085] (no input)
+[backend]   [086] (no input)
+[backend]   [087] (no input)
+[backend]   [088] (no input)
+[backend]   [089] (no input)
+[backend]   [090] (no input)
+[backend]   [091] batch: 1 events (stt=1 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: provide_insight: Proactive suggestion: Consider a phased rollout with a small group of users to test the new credit p  {"insight": "Based on the context, consider a phased rollout with a small group of users to test the new credit policy b…
+
+[backend]   [092] batch: 1 events (stt=1 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0[backend] 
+[backend]         action: provide_insight: Based on the context, consider a phased rollout with a small group of users to test the new credit p  {"suggestion": "Based on the context, consider a phased rollout with a small group of users to test the new credit polic…
+
+[backend]   [093] batch: 3 events (stt=3 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: provide_insight: Based on the context, consider a phased rollout with a small group of users to test the new credit p  {"insight": "Based on the context, consider a phased rollout with a small group of users to test the new credit policy b…
+
+[backend]   [094] batch: 1 events (stt=1 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: provide_insight: Based on the context, consider a phased rollout with a small group of users to test the new credit p  {"insight": "Based on the context, consider a phased rollout with a small group of users to test the new credit policy b…[backend] 
+
+[backend]   [095] batch: 2 events (stt=2 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: provide_insight: Based on the context, consider a phased rollout with a small group of users to test the new credit p  {"insight": "Based on the context, consider a phased rollout with a small group of users to test the new credit policy b…
+
+[backend]   [096] batch: 3 events (stt=3 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: provide_insight: Team is frustrated about network issues and credit uncertainty. Suggest: Proactively reach out to sa  {"insight": "Team is frustrated about network issues and credit uncertainty. Suggest: Proactively reach out to sales tea…[backend] 
+
+[backend]   [097] batch: 1 events (stt=1 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: suggest_next_step: Sales team needs to know about network and credit limits  {"suggestion": "Proactively reach out to sales team to discuss credit limits and network issues", "reason": "Sales team …
+
+[backend]   [098] batch: 1 events (stt=1 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: suggest_next_step: Proactive: Sales team needs to know about credit limits and network issues  {"suggestion": "Proactively reach out to sales team to discuss credit limits and network issues", "reason": "Sales team …
+
+[backend]   [099] (no input)
+[backend]   [100] (no input)
+[backend]   [101] (no input)[backend] 
+[backend]   [102] batch: 1 events (stt=1 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: suggest_next_step: Proactive outreach: Discuss credit limits and network issues with sales team  {"suggestion": "Proactively reach out to sales team to discuss credit limits and network issues", "reason": "Proactive o…
+
+[backend]   [103] batch: 12 events (stt=12 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: provide_insight: Proactive: 1:1 call with sales team to discuss credit limits and network issues  {"insight": "Based on the context, consider a 1:1 call with the sales team to discuss credit limits and network issues. …[backend] 
+
+[backend]   [104] batch: 8 events (stt=8 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: provide_insight: Based on the context, consider a 1:1 call with the sales team to discuss credit limits and network i  {"suggestion": "Based on the context, consider a 1:1 call with the sales team to discuss credit limits and network issue…
+
+[backend]   [105] batch: 2 events (stt=2 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: provide_insight: Based on the context, consider a 1:1 call with the sales team to discuss credit limits and network i  {"insight": "Based on the context, consider a 1:1 call with the sales team to discuss credit limits and network issues. …[backend] 
+
+[backend]   [106] batch: 6 events (stt=6 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: provide_insight: Based on the context, consider a 1:1 call with the sales team to discuss credit limits and network i  {"insight": "Based on the context, consider a 1:1 call with the sales team to discuss credit limits and network issues. …
+
+[backend]   [107] batch: 1 events (stt=1 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0[backend] 
+[backend]         action: provide_insight: Based on the context, consider a 1:1 call with the sales team to discuss credit limits and network i  {"insight": "Based on the context, consider a 1:1 call with the sales team to discuss credit limits and network issues. …
+
+[backend]   [108] (no input)
+[backend]   [109] (no input)
+[backend]   [110] (no input)
+[backend]   [111] (no input)
+[backend]   [112] (no input)
+[backend]   [113] (no input)
+[backend]   [114] (no input)
+[backend]   [115] (no input)
+[backend]   [116] (no input)
+[backend]   [117] (no input)
+[backend]   [118] (no input)
+[backend]   [119] (no input)
+[backend]   [120] (no input)
+[backend]   [121] (no input)
+[backend]   [122] (no input)
+[backend]   [123] (no input)
+[backend]   [124] (no input)
+[backend]   [125] (no input)
+[backend]   [126] (no input)
+[backend]   [127] (no input)
+[backend]   [128] (no input)
+[backend]   [129] (no input)
+[backend]   [130] (no input)
+[backend]   [131] (no input)
+[backend]   [132] (no input)
+[backend]   [133] (no input)
+[backend]   [134] (no input)
+[backend]   [135] (no input)
+[backend]   [136] (no input)
+[backend]   [137] (no input)
+[backend]   [138] (no input)
+[backend]   [139] (no input)
+[backend]   [140] (no input)
+[backend]   [141] (no input)
+[backend]   [142] (no input)
+[backend]   [143] (no input)
+[backend]   [144] (no input)
+[backend]   [145] (no input)
+[backend]   [146] batch: 1 events (stt=1 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: provide_insight: Team members are frustrated about not being able to see each other and uncertainty about credit  {"insight": "Team members are frustrated about not being able to see each other and uncertainty about credit. Suggest: S…
+
+[backend]   [147] (no input)
+[backend]   [148] (no input)
+[backend]   [149] (no input)
+[backend]   [150] (no input)
+[backend]   [151] (no input)
+[backend]   [152] (no input)
+[backend]   [153] (no input)
+[backend]   [154] (no input)
+[backend]   [155] (no input)
+[backend]   [156] (no input)
+[backend]   [157] (no input)
+[backend]   [158] (no input)
+[backend]   [159] (no input)
+[backend]   [160] (no input)
+[backend]   [161] (no input)
+[backend]   [162] (no input)
+[backend]   [163] batch: 1 events (stt=1 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0[backend] 
+[backend]         action: log_decision: Heuristic salvage  {}
+
+[backend]   [164] (no input)
+[backend]   [165] (no input)
+[backend]   [166] (no input)
+[backend]   [167] (no input)
+[backend]   [168] (no input)
+[backend]   [169] (no input)
+[backend]   [170] (no input)
+[backend]   [171] (no input)
+[backend]   [172] (no input)
+[backend]   [173] (no input)
+[backend]   [174] (no input)
+[backend]   [175] (no input)
+[backend]   [176] (no input)
+[backend]   [177] (no input)
+[backend]   [178] (no input)
+[backend]   [179] (no input)
+[backend]   [180] (no input)
+[backend]   [181] (no input)
+[backend]   [182] (no input)
+[backend]   [183] (no input)
+[backend]   [184] (no input)
+[backend]   [185] (no input)
+[backend]   [186] (no input)
+[backend]   [187] (no input)
+[backend]   [188] (no input)
+[backend]   [189] (no input)[backend] 
+[backend]   [190] batch: 1 events (stt=1 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: log_decision: Heuristic salvage  {}
+
+[backend]   [191] batch: 14 events (stt=14 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=1 decs=0 gaps=0
+[backend]         action: log_decision: Heuristic salvage  {}
+

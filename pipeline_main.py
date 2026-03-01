@@ -564,6 +564,7 @@ def run(args: argparse.Namespace):
             analyst._action_history = []
             if hub:
                 hub._latest_summary = {}
+                hub.publish("summary", _build_summary_payload(scribe, analyst, batch_n, 0.0, True))
             # Drain queue to clear pending audio
             drain(pq)
             RESET_REQUESTED.clear()
