@@ -185,8 +185,8 @@ class MeetingState:
 class ModelConfig:
     """Which Gemma models to use and how."""
     scribe_model: str = "mlx-community/gemma-3-4b-it-4bit"
-    analyst_model: str = "mlx-community/gemma-3-4b-it-4bit"
-    architect_model: str = "mlx-community/gemma-3-4b-it-4bit"
+    analyst_model: str = "outputs/gpu-analyst-fused-4bit"  # Fine-tuned, quantized (2.1 GB)
+    architect_model: str = "mlx-community/gemma-3-4b-it-4bit"  # Shared with scribe via singleton
     max_tokens: int = 1024
     temperature: float = 0.3
     # Local runtime policy

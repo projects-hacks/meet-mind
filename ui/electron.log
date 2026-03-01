@@ -1,0 +1,242 @@
+[backend] 2026-02-28 16:28:37,559 [backend.core.gemma] INFO: Backend detected: MLX (locked for session)
+2026-02-28 16:28:37,559 [backend.core.gemma] INFO: Created MLX model instance (cached): mlx-community/gemma-3-4b-it-4bit
+2026-02-28 16:28:37,559 [backend.core.gemma] INFO: Created MLX model instance (cached): outputs/gpu-analyst-fused-4bit
+[backend] 2026-02-28 16:28:37,562 [backend.main] INFO: MeetMind Agent 2 initialized.
+[backend] 2026-02-28 16:28:37,574 [backend.dashboard_server] INFO: Starting MeetMind local dashboard on http://127.0.0.1:8765 (air_gapped=False)
+[backend] INFO:     Started server process [53197]
+INFO:     Waiting for application startup.
+[backend] 2026-02-28 16:28:37,599 [backend.dashboard_server] INFO: Initializing MeetMind Event Hub...
+[backend] 2026-02-28 16:28:37,600 [backend.dashboard_server] INFO: Preloading VLM (gemma-3n-e4b-it-4bit)...
+[backend] INFO:     Application startup complete.
+[backend] INFO:     Uvicorn running on http://127.0.0.1:8765 (Press CTRL+C to quit)
+[backend] INFO:     127.0.0.1:51216 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51217 - "GET / HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51218 - "GET /assets/dashboard.js HTTP/1.1" 304 Not Modified
+[backend] INFO:     127.0.0.1:51217 - "GET /assets/dashboard.css HTTP/1.1" 304 Not Modified
+[backend] INFO:     127.0.0.1:51217 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51218 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51219 - "GET /api/summary HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51220 - "GET /api/model-status HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51220 - "GET /api/stream HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:28:38,657 [httpx] INFO: HTTP Request: GET https://huggingface.co/api/models/mlx-community/gemma-3n-e4b-it-4bit/revision/main "HTTP/1.1 307 Temporary Redirect"
+[backend] 2026-02-28 16:28:38,756 [httpx] INFO: HTTP Request: GET https://huggingface.co/api/models/mlx-community/gemma-3n-E4B-it-4bit/revision/main "HTTP/1.1 200 OK"
+[backend] Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s][backend] Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 243148.06it/s]
+[backend] Using `use_fast=True` but `torchvision` is not available. Falling back to the slow image processor.
+[backend] INFO:     127.0.0.1:51219 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51219 - "GET /api/health HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:28:43,070 [backend.dashboard_server] INFO: VLM preloaded: mlx-community/gemma-3n-e4b-it-4bit
+2026-02-28 16:28:43,070 [backend.dashboard_server] INFO: Preloading Scribe + Analyst text models...
+[backend] 2026-02-28 16:28:43,070 [backend.dashboard_server] INFO: Scribe model ready: mlx-community/gemma-3-4b-it-4bit
+2026-02-28 16:28:43,070 [backend.core.gemma] INFO: Loading MLX model: mlx-community/gemma-3-4b-it-4bit
+[backend] 2026-02-28 16:28:43,182 [httpx] INFO: HTTP Request: GET https://huggingface.co/api/models/mlx-community/gemma-3-4b-it-4bit/revision/main "HTTP/1.1 200 OK"
+[backend] Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s][backend] Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 292625.86it/s]
+[backend] 2026-02-28 16:28:45,641 [backend.core.gemma] INFO: MLX model loaded: mlx-community/gemma-3-4b-it-4bit
+2026-02-28 16:28:45,641 [backend.dashboard_server] INFO: Analyst model ready: outputs/gpu-analyst-fused-4bit
+[backend] 2026-02-28 16:28:45,641 [backend.core.gemma] INFO: Loading MLX model: outputs/gpu-analyst-fused-4bit
+[backend] INFO:     127.0.0.1:51219 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51219 - "GET /api/health HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:28:49,186 [backend.core.gemma] INFO: MLX model loaded: outputs/gpu-analyst-fused-4bit
+2026-02-28 16:28:49,186 [backend.dashboard_server] INFO: All model preloading complete.
+[backend] INFO:     127.0.0.1:51219 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51219 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51219 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51219 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51235 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51235 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51235 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51235 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:29:06,641 [backend.dashboard_server] INFO: Reusing preloaded VLM agent (no reload needed)
+[backend] 2026-02-28 16:29:06,645 [backend.dashboard_server] INFO: Capture _run_loop started
+[backend] INFO:     127.0.0.1:51235 - "POST /api/start-capture HTTP/1.1" 200 OK
+[backend] objc[53197]: Class AVFFrameReceiver is implemented in both /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/cv2/.dylibs/libavdevice.61.3.100.dylib (0x1087b83a8) and /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/av/.dylibs/libavdevice.62.1.100.dylib (0x1724e43a8). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+[backend] objc[53197]: Class AVFAudioReceiver is implemented in both /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/cv2/.dylibs/libavdevice.61.3.100.dylib (0x1087b83f8) and /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/av/.dylibs/libavdevice.62.1.100.dylib (0x1724e43f8). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+[backend] 2026-02-28 16:29:07,144 [httpx] INFO: HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-base/revision/main "HTTP/1.1 200 OK"
+[backend] INFO:     127.0.0.1:51235 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51235 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:29:11,568 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:29:11,667 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
+[backend] INFO:     127.0.0.1:51235 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51235 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:29:14,658 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:29:14,664 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
+[backend] 2026-02-28 16:29:15,017 [backend.dashboard_server] INFO: STT audio chunk (56 chars): Jordan, alright we have got 10m to 6pm for this install.
+[backend] /Users/maverickrajeev/Documents/projects/meet-mind/backend/dashboard_server.py:238: RuntimeWarning: coroutine 'LocalEventHub.publish' was never awaited
+  self._main_loop
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+Exception in thread Thread-5 (_run_loop):
+[backend] Traceback (most recent call last):
+[backend]   File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/threading.py", line 1043, in _bootstrap_inner
+    self.run()
+    ~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/threading.py", line 994, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/maverickrajeev/Documents/projects/meet-mind/backend/dashboard_server.py", line 238, in _run_loop
+    self._main_loop
+[backend] AttributeError: 'RealtimeCaptureBridge' object has no attribute '_main_loop'. Did you mean: '_run_loop'?
+[backend] 2026-02-28 16:29:17,676 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:29:17,680 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
+[backend] INFO:     127.0.0.1:51235 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51240 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:29:20,677 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:29:20,683 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
+[backend] INFO:     127.0.0.1:51240 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51240 - "GET /api/health HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:29:23,678 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:29:23,683 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
+[backend] INFO:     127.0.0.1:51240 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:29:26,682 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:29:26,691 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
+[backend] INFO:     127.0.0.1:51240 - "GET /api/health HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:29:29,688 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:29:29,696 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
+[backend] INFO:     127.0.0.1:51240 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:29:32,690 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:29:32,695 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
+[backend] INFO:     127.0.0.1:51240 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51240 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:29:35,692 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:29:35,697 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
+[backend] INFO:     127.0.0.1:51240 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51246 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:29:38,693 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:29:38,700 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
+[backend] 2026-02-28 16:29:41,694 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:29:41,702 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
+[backend] INFO:     127.0.0.1:51246 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51246 - "GET /api/health HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:29:44,923 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:29:44,980 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
+[backend] INFO:     127.0.0.1:51246 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51246 - "GET /api/health HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:29:48,211 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:29:48,277 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
+[backend] INFO:     127.0.0.1:51246 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:29:51,371 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:29:51,393 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
+[backend] INFO:     127.0.0.1:51246 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51246 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:29:54,440 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:29:54,452 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
+[backend] 2026-02-28 16:29:57,440 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:29:57,445 [faster_whisper] INFO: VAD filter removed 00:01.136 of audio
+[backend] INFO:     127.0.0.1:51246 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51261 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:30:00,444 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:30:00,453 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
+[backend] INFO:     127.0.0.1:51261 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51261 - "GET /api/health HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:30:03,451 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:30:03,456 [faster_whisper] INFO: VAD filter removed 00:00.816 of audio
+[backend] INFO:     127.0.0.1:51261 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:30:06,452 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:30:06,464 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
+[backend] INFO:     127.0.0.1:51261 - "GET /api/health HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:30:09,454 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:30:09,459 [faster_whisper] INFO: VAD filter removed 00:01.040 of audio
+[backend] INFO:     127.0.0.1:51261 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:30:12,466 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:30:12,472 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
+[backend] INFO:     127.0.0.1:51261 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51261 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:30:15,467 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:30:15,474 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
+[backend] INFO:     127.0.0.1:51261 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51269 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:30:18,472 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:30:18,480 [faster_whisper] INFO: VAD filter removed 00:01.072 of audio
+[backend] 2026-02-28 16:30:21,472 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:30:21,477 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
+[backend] INFO:     127.0.0.1:51269 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51269 - "GET /api/health HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:30:24,477 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:30:24,486 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
+[backend] INFO:     127.0.0.1:51269 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:30:27,480 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:30:27,490 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
+[backend] INFO:     127.0.0.1:51269 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51269 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:30:30,482 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:30:30,491 [faster_whisper] INFO: VAD filter removed 00:01.360 of audio
+[backend] INFO:     127.0.0.1:51269 - "GET /api/health HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:30:33,484 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:30:33,489 [faster_whisper] INFO: VAD filter removed 00:02.384 of audio
+[backend] INFO:     127.0.0.1:51269 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:30:36,490 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:30:36,495 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
+[backend] INFO:     127.0.0.1:51269 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51277 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:30:39,490 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:30:39,503 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
+[backend] INFO:     127.0.0.1:51277 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:30:42,493 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:30:42,503 [faster_whisper] INFO: VAD filter removed 00:01.776 of audio
+[backend] INFO:     127.0.0.1:51277 - "GET /api/health HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:30:45,494 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:30:45,506 [faster_whisper] INFO: VAD filter removed 00:02.128 of audio
+[backend] INFO:     127.0.0.1:51277 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51277 - "GET /api/health HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:30:48,497 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:30:48,502 [faster_whisper] INFO: VAD filter removed 00:00.208 of audio
+[backend] INFO:     127.0.0.1:51277 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:30:51,502 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:30:51,507 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
+[backend] INFO:     127.0.0.1:51277 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51277 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:30:54,502 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:30:54,509 [faster_whisper] INFO: VAD filter removed 00:01.296 of audio
+[backend] 2026-02-28 16:30:57,503 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:30:57,515 [faster_whisper] INFO: VAD filter removed 00:00.240 of audio
+[backend] INFO:     127.0.0.1:51277 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51293 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:31:00,504 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:31:00,513 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
+[backend] INFO:     127.0.0.1:51293 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51293 - "GET /api/health HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:31:03,510 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:31:03,518 [faster_whisper] INFO: VAD filter removed 00:00.304 of audio
+[backend] INFO:     127.0.0.1:51293 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:31:06,512 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:31:06,517 [faster_whisper] INFO: VAD filter removed 00:00.176 of audio
+[backend] INFO:     127.0.0.1:51293 - "GET /api/health HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:31:09,513 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:31:09,525 [faster_whisper] INFO: VAD filter removed 00:00.592 of audio
+[backend] INFO:     127.0.0.1:51299 - "POST /api/sample HTTP/1.1" 404 Not Found
+[backend] INFO:     127.0.0.1:51293 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:31:12,521 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:31:12,532 [faster_whisper] INFO: VAD filter removed 00:00.848 of audio
+[backend] INFO:     127.0.0.1:51293 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51293 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:31:15,531 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:31:15,541 [faster_whisper] INFO: VAD filter removed 00:00.400 of audio
+[backend] INFO:     127.0.0.1:51293 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51302 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:31:18,538 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:31:18,543 [faster_whisper] INFO: VAD filter removed 00:00.880 of audio
+[backend] 2026-02-28 16:31:21,538 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:31:21,547 [faster_whisper] INFO: VAD filter removed 00:00.944 of audio
+[backend] INFO:     127.0.0.1:51302 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51302 - "GET /api/health HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:31:25,393 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:31:25,398 [faster_whisper] INFO: VAD filter removed 00:00.272 of audio
+[backend] INFO:     127.0.0.1:51302 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:31:27,548 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:31:27,553 [faster_whisper] INFO: VAD filter removed 00:00.176 of audio
+[backend] INFO:     127.0.0.1:51302 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51302 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:31:30,551 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:31:30,556 [faster_whisper] INFO: VAD filter removed 00:00.880 of audio
+[backend] INFO:     127.0.0.1:51302 - "GET /api/health HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:31:33,551 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:31:33,559 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
+[backend] INFO:     127.0.0.1:51302 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:31:36,556 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:31:36,563 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
+[backend] INFO:     127.0.0.1:51302 - "GET /api/health HTTP/1.1" 200 OK
+[backend] INFO:     127.0.0.1:51308 - "GET /api/capture/status HTTP/1.1" 200 OK
+[backend] 2026-02-28 16:31:39,560 [faster_whisper] INFO: Processing audio with duration 00:03.000
+[backend] 2026-02-28 16:31:39,568 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
+[backend] INFO:     127.0.0.1:51308 - "GET /api/capture/status HTTP/1.1" 200 OK
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           [40128:0228/162844.789489:ERROR:network_service_instance_impl.cc(613)] Network service crashed, restarting service.
+[backend] /opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/resource_tracker.py:301: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-gpu6tx5r'}
+  warnings.warn(

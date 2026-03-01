@@ -8,6 +8,7 @@ from typing import Any, Callable
 from PIL import Image
 
 from backend.agents.roomscribe.config import AgentConfig
+from backend.core.gemma import mlx_inference_lock
 
 
 @dataclass(slots=True)
@@ -145,14 +146,15 @@ class RoomScribeAgent:
             "Do not add new content. Return plain text only.\n\n"
             f"Transcript chunk:\n{raw_text}"
         )
-        cleaned = generate(
-            self.model,
-            self.processor,
-            prompt=prompt,
-            max_tokens=self.cfg.max_tokens,
-            temp=self.cfg.temperature,
-            verbose=False,
-        )
+        with mlx_inference_lock:
+            cleaned = generate(
+                self.model,
+                self.processor,
+                prompt=prompt,
+                max_tokens=self.cfg.max_tokens,
+                temp=self.cfg.temperature,
+                verbose=False,
+            )
         return Event(kind="stt", text=self._to_text(cleaned), ts=self._ts())
 
     def image_to_text(self, image: Image.Image) -> Event:
@@ -167,15 +169,16 @@ class RoomScribeAgent:
             num_images=1,
         )
 
-        text = generate(
-            self.model,
-            self.processor,
-            prompt=prompt,
-            image=image,
-            max_tokens=self.cfg.max_tokens,
-            temp=self.cfg.temperature,
-            verbose=False,
-        )
+        with mlx_inference_lock:
+            text = generate(
+                self.model,
+                self.processor,
+                prompt=prompt,
+                image=image,
+                max_tokens=self.cfg.max_tokens,
+                temp=self.cfg.temperature,
+                verbose=False,
+            )
         cleaned = self._clean_ocr_text(self._to_text(text))
         return Event(kind="ocr", text=cleaned, ts=self._ts())
 

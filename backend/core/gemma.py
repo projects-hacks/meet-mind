@@ -5,13 +5,19 @@ Backends:
     Best for fine-tuned models loaded in LM Studio GUI.
   - MLX: Direct Apple Silicon inference via mlx-lm library.
     Best for quick prototyping with HuggingFace models.
+
+Memory management:
+  - Singleton cache: same model_id → same instance (avoids duplicate loads)
+  - unload() support: explicitly free model weights + clear Metal cache
+  - ModelPool: coordinates VLM ↔ text model lifecycle for memory-constrained devices
 """
 
+import gc
 import json
 import logging
 import os
+import threading
 import time
-from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -21,6 +27,12 @@ logger = logging.getLogger(__name__)
 
 MAX_RETRIES = 2
 RETRY_DELAY = 0.5
+
+# ── Global GPU inference lock ──────────────────────────────────────────
+# Apple Silicon has ONE unified GPU. Concurrent MLX inference (text + VLM)
+# causes [METAL] Command buffer execution failed: Caused GPU Timeout Error.
+# ALL mlx-lm and mlx-vlm generate() calls MUST acquire this lock first.
+mlx_inference_lock = threading.Lock()
 
 # LM Studio default endpoint
 LM_STUDIO_URL = os.environ.get("LM_STUDIO_URL", "http://localhost:1234/v1/chat/completions")
@@ -218,6 +230,7 @@ class GemmaMLX:
     - Lazy model loading with error handling
     - Retry logic for transient failures
     - Robust JSON extraction and truncation recovery
+    - Explicit unload() for memory management
     """
 
     def __init__(
@@ -230,26 +243,52 @@ class GemmaMLX:
         self._model = None
         self._tokenizer = None
         self._load_error = None
+        self._lock = threading.Lock()
 
     def _ensure_loaded(self):
         if self._model is not None:
             return
-        if self._load_error:
-            raise RuntimeError(f"Model previously failed to load: {self._load_error}")
-        if not self._allow_remote_models and not Path(self._model_id).expanduser().exists():
-            raise RuntimeError(f"Remote model not allowed: {self._model_id}")
-        try:
-            from mlx_lm import load
-            logger.info(f"Loading MLX model: {self._model_id}")
-            self._model, self._tokenizer = load(self._model_id)
-            logger.info(f"MLX model loaded: {self._model_id}")
-        except Exception as e:
-            self._load_error = str(e)
-            logger.error(f"Failed to load MLX model {self._model_id}: {e}")
-            raise
+        with self._lock:
+            if self._model is not None:
+                return
+            if self._load_error:
+                # Allow retry after explicit unload()
+                pass
+            if not self._allow_remote_models and not Path(self._model_id).expanduser().exists():
+                raise RuntimeError(f"Remote model not allowed: {self._model_id}")
+            try:
+                from mlx_lm import load
+                logger.info(f"Loading MLX model: {self._model_id}")
+                self._model, self._tokenizer = load(self._model_id)
+                self._load_error = None
+                logger.info(f"MLX model loaded: {self._model_id}")
+            except Exception as e:
+                self._load_error = str(e)
+                logger.error(f"Failed to load MLX model {self._model_id}: {e}")
+                raise
+
+    def unload(self):
+        """Explicitly free model weights and clear Metal cache.
+
+        After unload(), the next generate() call will lazy-reload.
+        """
+        with self._lock:
+            if self._model is None:
+                return
+            model_id = self._model_id
+            self._model = None
+            self._tokenizer = None
+            self._load_error = None
+            gc.collect()
+            try:
+                import mlx.core as mx
+                mx.metal.clear_cache()
+            except Exception:
+                pass
+            logger.info(f"MLX model unloaded: {model_id} (memory freed)")
 
     def generate(self, prompt: str, system_prompt: str = "", max_tokens: int = 1024) -> str:
-        """Generate text with retry logic."""
+        """Generate text with retry logic. Acquires GPU lock to prevent Metal timeout."""
         self._ensure_loaded()
         from mlx_lm import generate as mlx_generate
 
@@ -264,12 +303,13 @@ class GemmaMLX:
 
         for attempt in range(MAX_RETRIES + 1):
             try:
-                response = mlx_generate(
-                    self._model, self._tokenizer,
-                    prompt=formatted,
-                    max_tokens=max_tokens,
-                    verbose=False,
-                )
+                with mlx_inference_lock:
+                    response = mlx_generate(
+                        self._model, self._tokenizer,
+                        prompt=formatted,
+                        max_tokens=max_tokens,
+                        verbose=False,
+                    )
                 return response.strip()
             except Exception as e:
                 if attempt < MAX_RETRIES:
@@ -308,8 +348,37 @@ class GemmaMLX:
 
 
 # ══════════════════════════════════════════════════════════════════════
-# Factory — auto-selects best backend
+# Factory — auto-selects best backend (with singleton cache)
 # ══════════════════════════════════════════════════════════════════════
+
+_model_cache: dict[str, GemmaLMStudio | GemmaMLX] = {}
+_cache_lock = threading.Lock()
+
+# Backend choice is locked at first detection to prevent mid-session switching.
+# e.g. if LM Studio is running on first call but stopped later, reset() won't
+# accidentally switch agents to MLX while others remain on LM Studio.
+_backend_choice: str | None = None  # "lmstudio" | "mlx" | None (not yet decided)
+
+
+def _detect_backend(forced: str | None) -> str:
+    """Detect which backend to use. Result is locked for the session."""
+    global _backend_choice
+
+    if forced in ("lmstudio", "mlx"):
+        return forced
+
+    if _backend_choice is not None:
+        return _backend_choice
+
+    if _lmstudio_available():
+        _backend_choice = "lmstudio"
+        logger.info("Backend detected: LM Studio (locked for session)")
+    else:
+        _backend_choice = "mlx"
+        logger.info("Backend detected: MLX (locked for session)")
+
+    return _backend_choice
+
 
 def get_model(
     model_id: str = None,
@@ -318,22 +387,63 @@ def get_model(
 ) -> GemmaLMStudio | GemmaMLX:
     """Factory — returns the best available model provider.
 
+    IMPORTANT: Returns a cached singleton for the same model_id.
+    This prevents loading the same ~3.5 GB model 3 times for Scribe/Analyst/Architect.
+
+    Backend choice is detected once and locked for the entire session to prevent
+    inconsistent behavior if LM Studio starts/stops mid-meeting.
+
     Backend priority:
       1. 'lmstudio' — if LM Studio is running, use it (fine-tuned model)
-      2. 'mlx' — fallback to direct MLX inference
+      2. 'mlx' — fallback to direct MLX inference (singleton per model_id)
 
     Args:
         model_id: Model identifier (HuggingFace ID or local path)
         backend: Force 'lmstudio' or 'mlx'. None = auto-detect.
         allow_remote_models: Whether MLX can download remote models.
     """
-    if backend == "lmstudio" or (backend is None and _lmstudio_available()):
-        logger.info("Using LM Studio backend (fine-tuned Gemma 3 4B)")
-        return GemmaLMStudio()
-
     model_id = model_id or "mlx-community/gemma-3-4b-it-4bit"
-    logger.info(f"Using MLX backend: {model_id}")
-    return GemmaMLX(model_id, allow_remote_models=allow_remote_models)
+
+    # Fast path: return cached instance immediately (no network I/O)
+    with _cache_lock:
+        if model_id in _model_cache:
+            return _model_cache[model_id]
+
+    # Slow path: detect backend (only hits network on the very first call)
+    chosen = _detect_backend(backend)
+
+    with _cache_lock:
+        # Double-check after re-acquiring lock
+        if model_id in _model_cache:
+            return _model_cache[model_id]
+
+        if chosen == "lmstudio":
+            instance: GemmaLMStudio | GemmaMLX = GemmaLMStudio()
+            logger.info(f"Created LM Studio instance (cached as '{model_id}')")
+        else:
+            instance = GemmaMLX(model_id, allow_remote_models=allow_remote_models)
+            logger.info(f"Created MLX model instance (cached): {model_id}")
+
+        _model_cache[model_id] = instance
+        return instance
+
+
+def unload_all_models():
+    """Unload all cached models to free memory."""
+    with _cache_lock:
+        for mid, model in _model_cache.items():
+            if isinstance(model, GemmaMLX):
+                model.unload()
+        logger.info(f"Unloaded {len(_model_cache)} cached model(s)")
+
+
+def unload_model(model_id: str):
+    """Unload a specific cached model by ID."""
+    with _cache_lock:
+        model = _model_cache.get(model_id)
+        if model is not None and isinstance(model, GemmaMLX):
+            model.unload()
+            logger.info(f"Unloaded model: {model_id}")
 
 
 def _lmstudio_available() -> bool:

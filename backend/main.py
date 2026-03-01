@@ -45,15 +45,15 @@ class MeetMind:
         cfg.validate()
         self._config = cfg
 
-        # Initialize models (lazy-loaded on first use)
-        scribe_llm = get_model(cfg.scribe_model, allow_remote_models=cfg.allow_remote_models)
+        # Scribe + Architect share one model via singleton cache (~2.5 GB)
+        # Analyst uses its own fine-tuned quantized model (~2.1 GB)
+        shared_llm = get_model(cfg.scribe_model, allow_remote_models=cfg.allow_remote_models)
         analyst_llm = get_model(cfg.analyst_model, allow_remote_models=cfg.allow_remote_models)
-        architect_llm = get_model(cfg.architect_model, allow_remote_models=cfg.allow_remote_models)
 
         # Initialize agents
-        self._scribe = Scribe(scribe_llm)
+        self._scribe = Scribe(shared_llm)
         self._analyst = Analyst(analyst_llm)
-        self._architect = Architect(architect_llm)
+        self._architect = Architect(shared_llm)  # reuses scribe's model instance
         self._db = MeetingDB()
         self._cycle_count = 0
         self._total_time = 0.0
@@ -194,8 +194,11 @@ class MeetMind:
     def reset(self):
         """Clear state for a new meeting session."""
         cfg = self._config
-        self._scribe = Scribe(get_model(cfg.scribe_model, allow_remote_models=cfg.allow_remote_models))
-        self._analyst = Analyst(get_model(cfg.analyst_model, allow_remote_models=cfg.allow_remote_models))
+        shared_llm = get_model(cfg.scribe_model, allow_remote_models=cfg.allow_remote_models)
+        analyst_llm = get_model(cfg.analyst_model, allow_remote_models=cfg.allow_remote_models)
+        self._scribe = Scribe(shared_llm)
+        self._analyst = Analyst(analyst_llm)
+        self._architect = Architect(shared_llm)
         self._cycle_count = 0
         self._total_time = 0.0
         self._db.clear()

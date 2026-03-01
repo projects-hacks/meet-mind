@@ -1,86 +1,125 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MeetMind Local Dashboard</title>
-    <link rel="stylesheet" href="/assets/dashboard.css" />
-  </head>
-  <body>
-    <header>
-      <div>
-        <div class="title">MeetMind Local Dashboard</div>
-        <div id="meta" class="subtitle">Loading...</div>
-        <div class="status-row">
-          <div><span id="connDot" class="status-dot status-warn"></span><span id="connText">Connecting to local SSE...</span></div>
-          <div><span id="captureDot" class="status-dot status-idle"></span><span id="captureText">Capture stopped</span></div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MeetMind Local Dashboard</title>
+  <link rel="stylesheet" href="/assets/dashboard.css" />
+</head>
+
+<body>
+  <div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="loading-content">
+      <h2>Booting MeetMind AI Engine...</h2>
+      <ul id="modelStatusList" class="loading-models">
+        <li><span>RoomScribe VLM</span><span id="vlmStatus" class="status-loading">Loading...</span></li>
+        <li><span>Scribe Agent</span><span id="scribeStatus" class="status-loading">Loading...</span></li>
+        <li><span>Analyst Agent</span><span id="analystStatus" class="status-loading">Loading...</span></li>
+      </ul>
+      <p class="muted">Loading AI models into memory. This may take a minute...</p>
+    </div>
+  </div>
+
+  <header>
+    <div>
+      <div class="title">MeetMind Local Dashboard</div>
+      <div id="meta" class="subtitle">Loading...</div>
+      <div class="status-row">
+        <div><span id="connDot" class="status-dot status-warn"></span><span id="connText">Connecting to local
+            SSE...</span></div>
+        <div><span id="captureDot" class="status-dot status-idle"></span><span id="captureText">Capture stopped</span>
         </div>
       </div>
-      <div class="actions">
-        <span class="badge">LOCAL · ON DEVICE</span>
-        <button id="startCaptureBtn">Start Capture (Mic + Cam)</button>
-        <button id="stopCaptureBtn">Stop Capture</button>
-        <button id="sampleBtn">Sample Perception</button>
-        <button id="summaryBtn">Generate Summary</button>
-        <button id="resetBtn">Reset Session</button>
+    </div>
+    <div class="actions">
+      <span class="badge">LOCAL · ON DEVICE</span>
+      <button id="startCaptureBtn">Start Capture (Mic + Cam)</button>
+      <button id="stopCaptureBtn">Stop Capture</button>
+      <button id="sampleBtn">Sample Perception</button>
+      <button id="summaryBtn">Generate Summary</button>
+      <button id="resetBtn">Reset Session</button>
+    </div>
+  </header>
+
+  <main class="three-column-layout">
+    <!-- COL 1: AGENT 1 (PERCEPTION) -->
+    <section class="agent-column">
+      <div class="column-header">
+        <h2>Transcribing (Agent 1)</h2>
+        <div class="column-subtitle">RoomScribe STT & OCR</div>
       </div>
-    </header>
+      <div class="column-body feed-container" id="rawFeed">
+        <div class="muted small-text">Listening for audio and camera text...</div>
+      </div>
+    </section>
 
-    <main>
-      <section class="card span-4">
-        <h2>System Health</h2>
-        <pre id="health"></pre>
-      </section>
-      <section class="card span-4">
-        <h2>Last Cycle Result</h2>
-        <pre id="cycleResult"></pre>
-      </section>
-      <section class="card span-4">
-        <h2>Capture Status (Audio/Video)</h2>
-        <pre id="captureStatus"></pre>
-      </section>
-      <section class="card span-4">
-        <h2>Key Points</h2>
-        <ul id="keyPoints"></ul>
-      </section>
-      <section class="card span-4">
-        <h2>Action Items</h2>
-        <ul id="actionItems"></ul>
-      </section>
-      <section class="card span-4">
-        <h2>Decisions</h2>
-        <ul id="decisions"></ul>
-      </section>
-      <section class="card span-4">
-        <h2>Gaps</h2>
-        <ul id="gaps"></ul>
-      </section>
-      <section class="card span-4">
-        <h2>Suggestions</h2>
-        <ul id="suggestions"></ul>
-      </section>
-      <section class="card span-4">
-        <h2>Insights</h2>
-        <ul id="insights"></ul>
-      </section>
-      <section class="card span-6">
-        <h2>Timeline</h2>
-        <ul id="timeline"></ul>
-      </section>
-      <section class="card span-6">
-        <h2>Whiteboard</h2>
-        <pre id="whiteboard"></pre>
-      </section>
-      <section class="card span-12">
-        <h2>Artifact Viewer</h2>
-        <ul id="artifacts"></ul>
-      </section>
-      <section class="card span-12">
-        <h2>Latest Generated Artifact Content</h2>
-        <pre id="artifactContent" class="muted">No generated artifact content yet</pre>
-      </section>
-    </main>
+    <!-- COL 2: AGENT 2 (MEETING STATE) -->
+    <section class="agent-column middle-column">
+      <div class="column-header">
+        <h2>Meeting State (Agent 2)</h2>
+        <div class="column-subtitle">Scribe & Analyst</div>
+      </div>
+      <div class="column-body state-container">
+        <!-- Overview summary inside this column -->
+        <div class="state-card">
+          <div id="overviewTopic" class="state-title">Unknown meeting</div>
+          <div id="overviewDomain" class="state-subtitle">general</div>
+        </div>
 
-    <script src="/assets/dashboard.js"></script>
-  </body>
+        <div class="state-section">
+          <h3>Key Points</h3>
+          <ul id="keyPoints" class="state-list">
+            <li class="muted">No items yet</li>
+          </ul>
+        </div>
+
+        <div class="state-section">
+          <h3>Action Items</h3>
+          <ul id="actionItems" class="state-list">
+            <li class="muted">No items yet</li>
+          </ul>
+        </div>
+
+        <div class="state-section">
+          <h3>Decisions</h3>
+          <ul id="decisions" class="state-list">
+            <li class="muted">No items yet</li>
+          </ul>
+        </div>
+
+        <div class="state-section">
+          <h3>Insights & Gaps</h3>
+          <ul id="insights" class="state-list">
+            <li class="muted">No insights yet</li>
+          </ul>
+          <ul id="gaps" class="state-list hidden"></ul>
+        </div>
+
+        <div class="state-section">
+          <h3>Whiteboard/Visuals</h3>
+          <pre id="whiteboard" class="state-pre">No whiteboard content yet</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- COL 3: AGENT 3 (ARCHITECT) -->
+    <section class="agent-column">
+      <div class="column-header">
+        <h2>Actions (Agent 3)</h2>
+        <div class="column-subtitle">Architect Workflows</div>
+      </div>
+      <div class="column-body feed-container" id="architectFeed">
+        <div class="muted small-text">Waiting for Architect actions...</div>
+      </div>
+      <div class="artifact-container">
+        <h3>Generated Artifact</h3>
+        <pre id="artifactContent" class="artifact-pre">No artifact content yet</pre>
+      </div>
+    </section>
+  </main>
+
+  <script src="/assets/dashboard.js"></script>
+</body>
+
 </html>

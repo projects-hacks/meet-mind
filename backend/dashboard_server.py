@@ -28,6 +28,7 @@ from sse_starlette.sse import EventSourceResponse
 
 from backend.agents.roomscribe.agent import RoomScribeAgent
 from backend.agents.roomscribe.config import AgentConfig
+from backend.agents.roomscribe.ocr_worker import OCRWorker
 from backend.agents.roomscribe.sources import (
     CameraOCRSource,
     MicrophoneSTTSource,
@@ -55,65 +56,6 @@ class CaptureStartPayload(BaseModel):
     ignore_people: bool = False
 
 
-def _guess_visual_content_type(text: str) -> str:
-    s = text.lower().strip()
-    if not s:
-        return "empty"
-    if any(token in s for token in ("->", "flow", "diagram", "architecture", "pipeline")):
-        return "diagram"
-    if any(token in s for token in ("|", "table", "columns", "rows")):
-        return "table"
-    if any(token in s for token in ("- ", "•", "1.", "2.", "3.")):
-        return "list"
-    return "freeform"
-
-
-class OCRWorker:
-    def __init__(self, agent: RoomScribeAgent):
-        self.agent = agent
-        self._in_q: queue.Queue = queue.Queue(maxsize=1)
-        self._out_q: queue.Queue[dict[str, Any]] = queue.Queue()
-        self._stop = threading.Event()
-        self._thread = threading.Thread(target=self._run, daemon=True)
-
-    def start(self) -> None:
-        self._thread.start()
-
-    def stop(self) -> None:
-        self._stop.set()
-        try:
-            self._in_q.put_nowait(None)
-        except queue.Full:
-            pass
-        self._thread.join(timeout=2)
-
-    def submit(self, image: Any) -> None:
-        if self._in_q.full():
-            return
-        try:
-            self._in_q.put_nowait(image)
-        except queue.Full:
-            return
-
-    def poll(self) -> dict[str, Any] | None:
-        try:
-            return self._out_q.get_nowait()
-        except queue.Empty:
-            return None
-
-    def _run(self) -> None:
-        while not self._stop.is_set():
-            image = self._in_q.get()
-            if image is None:
-                return
-            try:
-                event = self.agent.image_to_text(image)
-                if event.text:
-                    self._out_q.put(self.agent.to_json(event))
-            except Exception as exc:
-                self._out_q.put({"type": "error", "text": f"OCR worker error: {exc}"})
-
-
 class RealtimeCaptureBridge:
     """Bridge RoomScribe camera+mic events to MeetMind Perception cycles."""
 
@@ -133,6 +75,7 @@ class RealtimeCaptureBridge:
         self._thread: threading.Thread | None = None
 
         self._agent: RoomScribeAgent | None = None
+        self._preloaded_agent: RoomScribeAgent | None = None  # cached from startup preload
         self._ocr_worker: OCRWorker | None = None
         self._cam: CameraOCRSource | None = None
         self._mic: MicrophoneSTTSource | None = None
@@ -166,7 +109,14 @@ class RealtimeCaptureBridge:
                 camera_interval=max(0.5, payload.camera_interval),
                 ignore_people=payload.ignore_people,
             )
-            self._agent = RoomScribeAgent(cfg)
+            # Reuse the preloaded VLM agent if available (avoids reloading ~5.5 GB)
+            if self._preloaded_agent is not None:
+                logger.info("Reusing preloaded VLM agent (no reload needed)")
+                self._agent = self._preloaded_agent
+                self._agent.cfg = cfg  # apply any config changes
+            else:
+                logger.info("No preloaded agent available — loading VLM now (may take ~30s)...")
+                self._agent = RoomScribeAgent(cfg)
             self._ocr_worker = OCRWorker(self._agent)
             self._cam = CameraOCRSource(
                 self._msg_q,
@@ -238,8 +188,13 @@ class RealtimeCaptureBridge:
         visual_changed = False
         flush_interval_s = 2.0
         last_flush = time.time()
+        loop_count = 0
+
+        logger.info("Capture _run_loop started")
 
         while not self._run_stop.is_set():
+            loop_count += 1
+
             if self._ocr_worker is not None:
                 ocr_out = self._ocr_worker.poll()
                 if ocr_out is not None:
@@ -248,26 +203,43 @@ class RealtimeCaptureBridge:
                         if text and text != latest_visual:
                             latest_visual = text
                             visual_changed = True
+                            logger.info(f"OCR result ({len(text)} chars): {text[:120]}")
                             with self._state_lock:
                                 self._visual_events += 1
                                 self._last_visual_ts = datetime.now().strftime("%H:%M:%S")
+                                if self._hub:
+                                    asyncio.run_coroutine_threadsafe(
+                                        self._hub.publish("raw_perception", {"type": "ocr", "text": text}),
+                                        self._main_loop
+                                    )
                             self._publish_status()
+                        elif text:
+                            logger.debug("OCR result unchanged — skipping")
                     elif ocr_out.get("type") == "error":
+                        logger.error(f"OCR worker error: {ocr_out.get('text')}")
                         self._set_error(str(ocr_out.get("text", "OCR error")))
 
             msg = next_message(self._msg_q, timeout_seconds=0.3)
             if msg is not None:
                 if msg.kind == "image" and self._ocr_worker is not None:
+                    logger.debug("Camera frame received — submitting to OCR worker")
                     self._ocr_worker.submit(msg.payload)
                 elif msg.kind == "stt":
                     text = str(msg.payload).strip()
                     if text:
+                        logger.info(f"STT audio chunk ({len(text)} chars): {text[:120]}")
                         pending_audio.append(text)
                         with self._state_lock:
                             self._audio_chunks += 1
                             self._last_audio_ts = datetime.now().strftime("%H:%M:%S")
+                            if self._hub:
+                                asyncio.run_coroutine_threadsafe(
+                                    self._hub.publish("raw_perception", {"type": "stt", "text": text}),
+                                    self._main_loop
+                                )
                         self._publish_status()
                 elif msg.kind == "error":
+                    logger.error(f"Source error: {msg.payload}")
                     self._set_error(str(msg.payload))
 
             now = time.time()
@@ -277,7 +249,14 @@ class RealtimeCaptureBridge:
 
             audio_text = " ".join(pending_audio).strip()
             if not audio_text and not visual_changed:
+                if loop_count % 50 == 0:
+                    logger.debug(f"Flush cycle {loop_count}: no new data — idle")
                 continue
+
+            logger.info(
+                f"Flush cycle {loop_count}: audio={len(pending_audio)} chunks, "
+                f"visual_changed={visual_changed}"
+            )
 
             ts = datetime.now().strftime("%H:%M:%S")
 
@@ -305,11 +284,19 @@ class RealtimeCaptureBridge:
     def _schedule_ingest(self, perception: Perception) -> None:
         if self._loop is None:
             return
+        
+        logger.info(f"Scheduling ingest for {perception.event_type} perception")
         fut = asyncio.run_coroutine_threadsafe(self._ingest(perception), self._loop)
-        try:
-            fut.result(timeout=20)
-        except Exception as exc:
-            self._set_error(f"Perception ingest error: {exc}")
+        
+        # Non-blocking error handler
+        def on_done(f):
+            try:
+                f.result()
+            except Exception as exc:
+                logger.error(f"Perception ingest error: {exc}")
+                self._set_error(f"Perception ingest error: {exc}")
+        
+        fut.add_done_callback(on_done)
 
     async def _ingest(self, perception: Perception) -> None:
         async with self._lock:
@@ -419,6 +406,7 @@ def create_dashboard_app(config: ModelConfig | None = None) -> FastAPI:
         try:
             status = await run_in_threadpool(capture.start, loop, payload)
         except Exception as exc:
+            logger.error(f"Failed to start capture: {exc}")
             raise HTTPException(status_code=500, detail=str(exc)) from exc
         return {"ok": True, "capture": status}
 
@@ -427,6 +415,10 @@ def create_dashboard_app(config: ModelConfig | None = None) -> FastAPI:
         capture: RealtimeCaptureBridge = app.state.capture_bridge
         status = await run_in_threadpool(capture.stop)
         return {"ok": True, "capture": status}
+
+    @app.get("/api/model-status")
+    async def get_model_status():
+        return {"ok": True, "status": app.state.model_status}
 
     @app.get("/api/summary")
     async def summary():
@@ -544,6 +536,68 @@ def create_dashboard_app(config: ModelConfig | None = None) -> FastAPI:
                 await hub.unsubscribe(q)
 
         return EventSourceResponse(event_generator())
+
+    @app.on_event("startup")
+    async def startup_event():
+        logger.info("Initializing MeetMind Event Hub...")
+        app.state.model_status = {
+            "vlm": {"status": "loading", "model_id": "Loading VLM..."},
+            "scribe": {"status": "loading", "model_id": cfg.scribe_model},
+            "analyst": {"status": "loading", "model_id": cfg.analyst_model}
+        }
+
+        async def publish_model_status():
+            hub: LocalEventHub = app.state.hub
+            await hub.publish("model_status", app.state.model_status)
+
+        # Preload models SEQUENTIALLY in one background thread to avoid GPU conflicts.
+        # Apple Silicon has only one GPU — parallel loads cause Metal timeout errors.
+        def preload_all_models(main_loop):
+            # --- VLM (RoomScribe vision model) ---
+            try:
+                logger.info("Preloading VLM (gemma-3n-e4b-it-4bit)...")
+                agent_cfg = AgentConfig()
+                agent = RoomScribeAgent(agent_cfg)
+                app.state.capture_bridge._preloaded_agent = agent
+                app.state.model_status["vlm"]["status"] = "ready"
+                app.state.model_status["vlm"]["model_id"] = agent.model_id
+                logger.info(f"VLM preloaded: {agent.model_id}")
+            except Exception as e:
+                logger.error(f"Failed to preload VLM: {e}")
+                app.state.model_status["vlm"]["status"] = "error"
+            asyncio.run_coroutine_threadsafe(publish_model_status(), main_loop)
+
+            # --- Text models (Scribe + Analyst — singleton cache) ---
+            try:
+                logger.info("Preloading Scribe + Analyst text models...")
+                from backend.core.gemma import get_model
+                scribe_model = get_model(cfg.scribe_model, allow_remote_models=cfg.allow_remote_models)
+                app.state.model_status["scribe"]["status"] = "ready"
+                logger.info(f"Scribe model ready: {cfg.scribe_model}")
+                asyncio.run_coroutine_threadsafe(publish_model_status(), main_loop)
+
+                # Force eager load so first inference isn't slow
+                if hasattr(scribe_model, '_ensure_loaded'):
+                    scribe_model._ensure_loaded()
+
+                analyst_model = get_model(cfg.analyst_model, allow_remote_models=cfg.allow_remote_models)
+                app.state.model_status["analyst"]["status"] = "ready"
+                logger.info(f"Analyst model ready: {cfg.analyst_model}")
+                asyncio.run_coroutine_threadsafe(publish_model_status(), main_loop)
+
+                if hasattr(analyst_model, '_ensure_loaded'):
+                    analyst_model._ensure_loaded()
+
+            except Exception as e:
+                logger.error(f"Failed to preload text models: {e}")
+                app.state.model_status["scribe"]["status"] = "error"
+                app.state.model_status["analyst"]["status"] = "error"
+                asyncio.run_coroutine_threadsafe(publish_model_status(), main_loop)
+
+            logger.info("All model preloading complete.")
+
+        loop = asyncio.get_running_loop()
+        loop.run_in_executor(None, preload_all_models, loop)
 
     return app
 

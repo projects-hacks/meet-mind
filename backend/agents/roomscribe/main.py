@@ -4,10 +4,10 @@ import argparse
 from dataclasses import asdict
 import json
 import queue
-import threading
 
 from backend.agents.roomscribe.agent import RoomScribeAgent
 from backend.agents.roomscribe.config import AgentConfig
+from backend.agents.roomscribe.ocr_worker import OCRWorker
 from backend.agents.roomscribe.sources import (
     CameraOCRSource,
     MicrophoneSTTSource,
@@ -17,53 +17,6 @@ from backend.agents.roomscribe.sources import (
 )
 from backend.agents.scribe import ScribeBatcher
 from backend.core.config import MeetingState, Perception
-
-
-class OCRWorker:
-    def __init__(self, agent: RoomScribeAgent) -> None:
-        self.agent = agent
-        self._in_q: queue.Queue = queue.Queue(maxsize=1)
-        self._out_q: queue.Queue[dict] = queue.Queue()
-        self._stop = threading.Event()
-        self._thread = threading.Thread(target=self._run, daemon=True)
-
-    def start(self) -> None:
-        self._thread.start()
-
-    def stop(self) -> None:
-        self._stop.set()
-        try:
-            self._in_q.put_nowait(None)
-        except queue.Full:
-            pass
-        self._thread.join(timeout=2)
-
-    def submit(self, image) -> None:
-        # Drop frame if OCR worker is still busy to keep STT responsive.
-        if self._in_q.full():
-            return
-        try:
-            self._in_q.put_nowait(image)
-        except queue.Full:
-            return
-
-    def poll(self) -> dict | None:
-        try:
-            return self._out_q.get_nowait()
-        except queue.Empty:
-            return None
-
-    def _run(self) -> None:
-        while not self._stop.is_set():
-            image = self._in_q.get()
-            if image is None:
-                return
-            try:
-                event = self.agent.image_to_text(image)
-                if event.text:
-                    self._out_q.put(self.agent.to_json(event))
-            except Exception as exc:
-                self._out_q.put({"type": "error", "text": f"OCR worker error: {exc}"})
 
 
 def parse_args() -> argparse.Namespace:
