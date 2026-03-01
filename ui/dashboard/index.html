@@ -11,11 +11,11 @@
 <body>
   <div id="loadingOverlay" class="loading-overlay hidden">
     <div class="loading-content">
-      <h2>Booting MeetMind AI Engine...</h2>
+      <h2>⚡ Booting MeetMind AI Engine...</h2>
       <ul id="modelStatusList" class="loading-models">
-        <li><span>RoomScribe VLM</span><span id="vlmStatus" class="status-loading">Loading...</span></li>
-        <li><span>Scribe Agent</span><span id="scribeStatus" class="status-loading">Loading...</span></li>
-        <li><span>Analyst Agent</span><span id="analystStatus" class="status-loading">Loading...</span></li>
+        <li><span id="vlmLabel"></span><span id="vlmStatus" class="status-loading">Loading...</span></li>
+        <li><span id="scribeLabel"></span><span id="scribeStatus" class="status-loading">Loading...</span></li>
+        <li><span id="analystLabel"></span><span id="analystStatus" class="status-loading">Loading...</span></li>
       </ul>
       <p class="muted">Loading AI models into memory. This may take a minute...</p>
     </div>
@@ -33,12 +33,12 @@
       </div>
     </div>
     <div class="actions">
-      <span class="badge">LOCAL · ON DEVICE</span>
-      <button id="startCaptureBtn">Start Capture (Mic + Cam)</button>
-      <button id="stopCaptureBtn">Stop Capture</button>
-      <button id="sampleBtn">Sample Perception</button>
-      <button id="summaryBtn">Generate Summary</button>
-      <button id="resetBtn">Reset Session</button>
+      <span class="badge" id="badgeLabel"></span>
+      <button id="startCaptureBtn"></button>
+      <button id="stopCaptureBtn"></button>
+      <button id="sampleBtn"></button>
+      <button id="summaryBtn"></button>
+      <button id="resetBtn"></button>
     </div>
   </header>
 
@@ -46,8 +46,8 @@
     <!-- COL 1: AGENT 1 (PERCEPTION) -->
     <section class="agent-column">
       <div class="column-header">
-        <h2>Transcribing (Agent 1)</h2>
-        <div class="column-subtitle">RoomScribe STT & OCR</div>
+        <h2 id="col1Title"></h2>
+        <div class="column-subtitle" id="col1Sub"></div>
       </div>
       <div class="column-body feed-container" id="rawFeed">
         <div class="muted small-text">Listening for audio and camera text...</div>
@@ -57,8 +57,8 @@
     <!-- COL 2: AGENT 2 (MEETING STATE) -->
     <section class="agent-column middle-column">
       <div class="column-header">
-        <h2>Meeting State (Agent 2)</h2>
-        <div class="column-subtitle">Scribe & Analyst</div>
+        <h2 id="col2Title"></h2>
+        <div class="column-subtitle" id="col2Sub"></div>
       </div>
       <div class="column-body state-container">
         <!-- Overview summary inside this column -->
@@ -68,36 +68,37 @@
         </div>
 
         <div class="state-section">
-          <h3>Key Points</h3>
+          <h3 id="hKeyPoints"></h3>
           <ul id="keyPoints" class="state-list">
             <li class="muted">No items yet</li>
           </ul>
         </div>
 
         <div class="state-section">
-          <h3>Action Items</h3>
+          <h3 id="hActionItems"></h3>
           <ul id="actionItems" class="state-list">
             <li class="muted">No items yet</li>
           </ul>
         </div>
 
         <div class="state-section">
-          <h3>Decisions</h3>
+          <h3 id="hDecisions"></h3>
           <ul id="decisions" class="state-list">
             <li class="muted">No items yet</li>
           </ul>
         </div>
 
         <div class="state-section">
-          <h3>Insights & Gaps</h3>
-          <ul id="insights" class="state-list">
-            <li class="muted">No insights yet</li>
-          </ul>
-          <ul id="gaps" class="state-list hidden"></ul>
+          <h3 id="hInsights"></h3>
+          <ul id="suggestions" class="state-list"></ul>
+          <ul id="insights" class="state-list"></ul>
+          <h4 class="state-sub-header" id="hGaps">Gaps</h4>
+          <ul id="gaps" class="state-list"></ul>
+          <div id="insightsGapsEmpty" class="muted">No insights or gaps yet</div>
         </div>
 
         <div class="state-section">
-          <h3>Whiteboard/Visuals</h3>
+          <h3 id="hWhiteboard"></h3>
           <pre id="whiteboard" class="state-pre">No whiteboard content yet</pre>
         </div>
       </div>
@@ -106,14 +107,14 @@
     <!-- COL 3: AGENT 3 (ARCHITECT) -->
     <section class="agent-column">
       <div class="column-header">
-        <h2>Actions (Agent 3)</h2>
-        <div class="column-subtitle">Architect Workflows</div>
+        <h2 id="col3Title"></h2>
+        <div class="column-subtitle" id="col3Sub"></div>
       </div>
       <div class="column-body feed-container" id="architectFeed">
         <div class="muted small-text">Waiting for Architect actions...</div>
       </div>
       <div class="artifact-container">
-        <h3>Generated Artifact</h3>
+        <h3 id="hArtifact"></h3>
         <pre id="artifactContent" class="artifact-pre">No artifact content yet</pre>
       </div>
     </section>

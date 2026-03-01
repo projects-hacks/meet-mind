@@ -27,22 +27,22 @@ logger = logging.getLogger(__name__)
 JsonDict = dict[str, Any]
 
 
-ANALYST_SYSTEM = """You are a meeting analyst that outputs JSON. Based on the meeting state, decide the single most important action.
+ANALYST_SYSTEM = """You are a proactive, highly intelligent meeting assistant and analyst. Based on the meeting state, act like a collaborative team member and decide the single most helpful action to unblock or guide the team.
 
 You MUST respond with valid JSON in this exact format:
 {"action":"function_name","params":{...},"reasoning":"why"}
 
-Available actions:
+Available actions (PRIORITIZE PROVIDING INSIGHTS AND SUGGESTIONS OVER FLAGGING GAPS):
+- provide_insight: {"insight":"Provide detailed, actionable advice, context, or solutions to help the users solve the problem they are currently discussing","category":"architecture|strategy|risk|efficiency"}
+- suggest_next_step: {"suggestion":"Detailed and helpful suggestion on what the team should do or discuss next","reason":"why"}
 - extract_action_item: {"owner":"name","task":"what","deadline":"when","priority":"high|medium|low"}
 - log_decision: {"decision":"what was decided","alternatives_rejected":["alt1"],"rationale":"why"}
 - flag_gap: {"topic":"what","gap_type":"no_owner|no_deadline|no_decision|unclear_scope","suggestion":"fix"}
-- request_artifact: {"artifact_type":"impl_plan|sales_brief|process_spec|meeting_summary|architecture_doc","context_summary":"key context","domain":"domain"}
-- suggest_next_step: {"suggestion":"what to discuss next","reason":"why"}
-- provide_insight: {"insight":"useful context or warning","category":"risk|context|efficiency"}
+- request_artifact: {"artifact_type":"impl_plan|sales_brief|process_spec","context_summary":"key context","domain":"domain"}
 - continue_observing: {"reason":"why no action"}
 
-Example:
-{"action":"extract_action_item","params":{"owner":"Sarah","task":"Implement OAuth","deadline":"Friday","priority":"high"},"reasoning":"Sarah was assigned OAuth"}
+CRITICAL CONSTRAINT: DO NOT use `flag_gap` for general conversation points. Only use `flag_gap` if the team explicitly agreed to do something but forgot to assign an owner or deadline. If the team is brainstorming or discussing a topic, YOU MUST use `provide_insight` or `suggest_next_step`. Act as a helpful meeting participant. Provide detailed, thoughtful insights to genuinely help the team!
+
 
 Respond with ONLY the JSON object."""
 
@@ -147,13 +147,16 @@ class Analyst:
 
     def decide(self, state: MeetingState) -> JsonDict:
         """Analyze meeting state and return an action decision."""
-        if not state.key_points:
-            return _fallback("No key points captured yet.")
+        # Let the Analyst run even with minimal state — it can still
+        # suggest_next_step or provide_insight from timeline/whiteboard data
+        if not state.key_points and not state.timeline and not state.whiteboard_content:
+            return _fallback("No meeting content captured yet.")
 
         prompt = self._build_prompt(state)
 
         try:
             raw = self._llm.generate(prompt, ANALYST_SYSTEM, max_tokens=256)
+            logger.info(f"Analyst raw output: {raw[:200]}")
         except Exception as e:
             logger.error(f"Analyst LLM call failed: {e}")
             return _fallback(f"LLM error: {e}")
@@ -179,7 +182,7 @@ Tracked: {len(state.action_items)} actions, {len(state.decisions)} decisions, {l
 Recent agent actions: {', '.join(recent) if recent else 'none'}
 Consecutive observations without action: {self._consecutive_observe}
 
-What is the single most important action to take now?"""
+What is the single most important action to take now? If the team is discussing a problem, use `provide_insight` with a highly detailed suggestion on how to solve it."""
 
     def apply_action(self, action: JsonDict, state: MeetingState) -> MeetingState:
         """Apply an action to the meeting state. Deduplicates before adding."""

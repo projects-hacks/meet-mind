@@ -51,9 +51,9 @@ async function waitForBackendReady(maxAttempts = 60) {
 }
 
 function startBackend() {
-  const args = ['-m', 'backend.main', '--serve-dashboard', '--host', HOST, '--port', String(PORT)];
+  const args = ['pipeline_main.py', '--ui', '--port', String(PORT), '--camera'];
   if (AIR_GAPPED) {
-    args.push('--air-gapped', '--no-remote-models');
+    args.push('--stt-model', 'tiny'); // Use tiny model for speed in airgapped demo
   }
 
   backendProcess = spawn(PYTHON_BIN, args, {
@@ -131,7 +131,7 @@ async function bootstrap() {
     dialog.showErrorBox(
       'MeetMind Startup Failed',
       `Could not start local backend at http://${HOST}:${PORT}.\n\n` +
-        `Make sure Python dependencies are installed and '${PYTHON_BIN}' is available.`
+      `Make sure Python dependencies are installed and '${PYTHON_BIN}' is available.`
     );
     app.quit();
     return;

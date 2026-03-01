@@ -1,188 +1,107 @@
-[backend] 2026-02-28 16:34:03,491 [backend.core.gemma] INFO: Backend detected: MLX (locked for session)
-2026-02-28 16:34:03,491 [backend.core.gemma] INFO: Created MLX model instance (cached): mlx-community/gemma-3-4b-it-4bit
-[backend] 2026-02-28 16:34:03,491 [backend.core.gemma] INFO: Created MLX model instance (cached): outputs/gpu-analyst-fused-4bit
-[backend] 2026-02-28 16:34:03,493 [backend.main] INFO: MeetMind Agent 2 initialized.
-[backend] 2026-02-28 16:34:03,505 [backend.dashboard_server] INFO: Starting MeetMind local dashboard on http://127.0.0.1:8765 (air_gapped=False)
-[backend] INFO:     Started server process [59578]
-INFO:     Waiting for application startup.
-[backend] 2026-02-28 16:34:03,532 [backend.dashboard_server] INFO: Initializing MeetMind Event Hub...
-[backend] 2026-02-28 16:34:03,532 [backend.dashboard_server] INFO: Preloading VLM (gemma-3n-e4b-it-4bit)...
-[backend] INFO:     Application startup complete.
-[backend] INFO:     Uvicorn running on http://127.0.0.1:8765 (Press CTRL+C to quit)
-[backend] INFO:     127.0.0.1:51411 - "GET /api/health HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51412 - "GET / HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51413 - "GET /assets/dashboard.css HTTP/1.1" 304 Not Modified
-[backend] INFO:     127.0.0.1:51412 - "GET /assets/dashboard.js HTTP/1.1" 304 Not Modified
-[backend] INFO:     127.0.0.1:51412 - "GET /api/summary HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51413 - "GET /api/health HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51414 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51415 - "GET /api/model-status HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51415 - "GET /api/stream HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:34:04,596 [httpx] INFO: HTTP Request: GET https://huggingface.co/api/models/mlx-community/gemma-3n-e4b-it-4bit/revision/main "HTTP/1.1 307 Temporary Redirect"
-[backend] 2026-02-28 16:34:04,800 [httpx] INFO: HTTP Request: GET https://huggingface.co/api/models/mlx-community/gemma-3n-E4B-it-4bit/revision/main "HTTP/1.1 200 OK"
-[backend] Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s][backend] Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 72733.60it/s]
+[backend] 2026-02-28 17:43:06,216 [pipeline] INFO: Dashboard: http://127.0.0.1:8765
+[backend] 2026-02-28 17:43:06,216 [pipeline] INFO: Loading text LLM…
+[backend] 2026-02-28 17:43:06,272 [pipeline] INFO: Warming up Text LLM on GPU...
+[backend] Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s][backend] Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 139422.85it/s]
+[backend] 2026-02-28 17:43:10,680 [pipeline] INFO: Text LLM ready
+2026-02-28 17:43:10,683 [pipeline] INFO: Starting mic (whisper-base, chunk=3.0s)…
+[backend] 2026-02-28 17:43:12,716 [pipeline] INFO: Mic ready
+[backend] 2026-02-28 17:43:12,716 [pipeline] INFO: Loading VLM for camera…
+[backend] objc[43298]: Class AVFFrameReceiver is implemented in both /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/cv2/.dylibs/libavdevice.61.3.100.dylib (0x33bf243a8) and /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/av/.dylibs/libavdevice.62.1.100.dylib (0x3434e43a8). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+objc[43298]: Class AVFAudioReceiver is implemented in both /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/cv2/.dylibs/libavdevice.61.3.100.dylib (0x33bf243f8) and /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/av/.dylibs/libavdevice.62.1.100.dylib (0x3434e43f8). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+[backend] Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s][backend] Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 56362.43it/s]
 [backend] Using `use_fast=True` but `torchvision` is not available. Falling back to the slow image processor.
-[backend] INFO:     127.0.0.1:51414 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51414 - "GET /api/health HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:34:09,411 [backend.dashboard_server] INFO: VLM preloaded: mlx-community/gemma-3n-e4b-it-4bit
-2026-02-28 16:34:09,412 [backend.dashboard_server] INFO: Preloading Scribe + Analyst text models...
-2026-02-28 16:34:09,412 [backend.dashboard_server] INFO: Scribe model ready: mlx-community/gemma-3-4b-it-4bit
-[backend] 2026-02-28 16:34:09,412 [backend.core.gemma] INFO: Loading MLX model: mlx-community/gemma-3-4b-it-4bit
-[backend] 2026-02-28 16:34:09,516 [httpx] INFO: HTTP Request: GET https://huggingface.co/api/models/mlx-community/gemma-3-4b-it-4bit/revision/main "HTTP/1.1 200 OK"
-[backend] Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s][backend] Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 111107.39it/s]
-[backend] INFO:     127.0.0.1:51414 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:34:12,086 [backend.core.gemma] INFO: MLX model loaded: mlx-community/gemma-3-4b-it-4bit
-2026-02-28 16:34:12,086 [backend.dashboard_server] INFO: Analyst model ready: outputs/gpu-analyst-fused-4bit
-[backend] 2026-02-28 16:34:12,086 [backend.core.gemma] INFO: Loading MLX model: outputs/gpu-analyst-fused-4bit
-[backend] INFO:     127.0.0.1:51414 - "GET /api/health HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:34:14,917 [backend.core.gemma] INFO: MLX model loaded: outputs/gpu-analyst-fused-4bit
-2026-02-28 16:34:14,917 [backend.dashboard_server] INFO: All model preloading complete.
-[backend] INFO:     127.0.0.1:51414 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:34:16,350 [backend.dashboard_server] INFO: Reusing preloaded VLM agent (no reload needed)
-[backend] 2026-02-28 16:34:16,354 [backend.dashboard_server] INFO: Capture _run_loop started
-[backend] INFO:     127.0.0.1:51414 - "POST /api/start-capture HTTP/1.1" 200 OK
-[backend] objc[59578]: Class AVFFrameReceiver is implemented in both /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/cv2/.dylibs/libavdevice.61.3.100.dylib (0x10a7783a8) and /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/av/.dylibs/libavdevice.62.1.100.dylib (0x1705b83a8). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
-[backend] objc[59578]: Class AVFAudioReceiver is implemented in both /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/cv2/.dylibs/libavdevice.61.3.100.dylib (0x10a7783f8) and /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/av/.dylibs/libavdevice.62.1.100.dylib (0x1705b83f8). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
-[backend] 2026-02-28 16:34:16,965 [httpx] INFO: HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-base/revision/main "HTTP/1.1 200 OK"
-[backend] INFO:     127.0.0.1:51414 - "GET /api/health HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51414 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:34:21,232 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:34:21,369 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
-[backend] 2026-02-28 16:34:21,726 [backend.dashboard_server] INFO: STT audio chunk (57 chars): Combines a fine tune on device model, add prettier tasks.
-[backend] 2026-02-28 16:34:22,633 [backend.dashboard_server] INFO: Flush cycle 22: audio=1 chunks, visual_changed=False
-2026-02-28 16:34:22,633 [backend.dashboard_server] INFO: Scheduling ingest for stt_raw perception
-[backend] INFO:     127.0.0.1:51414 - "GET /api/health HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51420 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:34:24,360 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:34:24,365 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
-[backend] INFO:     127.0.0.1:51420 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:34:28,056 [backend.dashboard_server] INFO: STT audio chunk (38 chars): you can take behavior, you are device.
-[backend] 2026-02-28 16:34:28,067 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:34:28,073 [faster_whisper] INFO: VAD filter removed 00:00.112 of audio
-[backend] 2026-02-28 16:34:28,449 [backend.dashboard_server] INFO: STT audio chunk (22 chars): and acts autonomously.
-[backend] INFO:     127.0.0.1:51420 - "GET /api/health HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:34:29,058 [backend.dashboard_server] INFO: Flush cycle 46: audio=2 chunks, visual_changed=False
-[backend] 2026-02-28 16:34:29,059 [backend.dashboard_server] INFO: Scheduling ingest for stt_raw perception
-[backend] 2026-02-28 16:34:30,366 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:34:30,372 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
-[backend] 2026-02-28 16:34:30,666 [backend.dashboard_server] INFO: STT audio chunk (38 chars): input camera, video or screen feeding.
-[backend] 2026-02-28 16:34:31,174 [backend.dashboard_server] INFO: Flush cycle 54: audio=1 chunks, visual_changed=False
-2026-02-28 16:34:31,174 [backend.dashboard_server] INFO: Scheduling ingest for stt_raw perception
-[backend] INFO:     127.0.0.1:51420 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:34:33,368 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:34:33,373 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
-[backend] INFO:     127.0.0.1:51420 - "GET /api/health HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:34:33,702 [backend.dashboard_server] INFO: STT audio chunk (52 chars): to the system are generally done this rancor device.
-[backend] 2026-02-28 16:34:35,512 [backend.dashboard_server] INFO: Flush cycle 69: audio=1 chunks, visual_changed=False
-2026-02-28 16:34:35,512 [backend.dashboard_server] INFO: Scheduling ingest for stt_raw perception
-[backend] INFO:     127.0.0.1:51420 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:34:36,382 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:34:36,388 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
-[backend] INFO:     127.0.0.1:51420 - "GET /api/health HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:34:39,388 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:34:39,414 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
-[backend] INFO:     127.0.0.1:51420 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:34:42,674 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:34:42,769 [faster_whisper] INFO: VAD filter removed 00:00.112 of audio
-[backend] INFO:     127.0.0.1:51420 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51428 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:34:46,474 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:34:46,510 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
-[backend] 2026-02-28 16:34:47,490 [backend.dashboard_server] INFO: OCR result (240 chars): a person wearing glasses, looking downwards. The person has dark, curly hair and is wearing a light-colored shirt. The b
-[backend] INFO:     127.0.0.1:51428 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:34:48,529 [backend.dashboard_server] INFO: Flush cycle 112: audio=0 chunks, visual_changed=True
-[backend] 2026-02-28 16:34:48,540 [backend.dashboard_server] INFO: Scheduling ingest for ocr perception
-[backend] INFO:     127.0.0.1:51428 - "GET /api/health HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51428 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:34:51,860 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:34:51,981 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
-[backend] INFO:     127.0.0.1:51428 - "GET /api/health HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:34:55,008 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:34:55,050 [faster_whisper] INFO: VAD filter removed 00:02.568 of audio
-[backend] INFO:     127.0.0.1:51428 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:34:58,131 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:34:58,139 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
-[backend] INFO:     127.0.0.1:51428 - "GET /api/health HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51428 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:35:01,158 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:35:01,189 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
-[backend] INFO:     127.0.0.1:51428 - "GET /api/health HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51435 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:35:04,393 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:35:04,400 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
-[backend] 2026-02-28 16:35:05,500 [backend.agents.analyst] WARNING: Analyst fallback: No key points captured yet.
-[backend] 2026-02-28 16:35:05,583 [backend.main] INFO: Cycle 1 [42.9s] → continue_observing | pts:0 | acts:0 | decs:0 | gaps:0
-[backend] INFO:     127.0.0.1:51435 - "GET /api/summary HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51435 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51435 - "GET /api/health HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:35:09,714 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:35:09,866 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
-[backend] INFO:     127.0.0.1:51435 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:35:13,252 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:35:13,302 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
-[backend] INFO:     127.0.0.1:51435 - "GET /api/health HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51435 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:35:16,551 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:35:16,589 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
-[backend] INFO:     127.0.0.1:51435 - "GET /api/health HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:35:19,576 [backend.dashboard_server] INFO: OCR result (1309 chars): ## Q2 Roadmap **Q2 Roadmap:** The Q2 roadmap outlines key initiatives for the upcoming quarter, focusing on strategic al
-[backend] 2026-02-28 16:35:20,738 [backend.dashboard_server] INFO: Flush cycle 218: audio=0 chunks, visual_changed=True
-[backend] INFO:     127.0.0.1:51435 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:35:20,764 [backend.dashboard_server] INFO: Scheduling ingest for ocr perception
-[backend] 2026-02-28 16:35:22,088 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:35:22,219 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
-[backend] INFO:     127.0.0.1:51435 - "GET /api/health HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51444 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:35:25,708 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:35:25,720 [faster_whisper] INFO: VAD filter removed 00:02.544 of audio
-[backend] 2026-02-28 16:35:26,533 [backend.dashboard_server] INFO: STT audio chunk (5 chars): Okay.
-[backend] 2026-02-28 16:35:27,442 [backend.dashboard_server] INFO: Flush cycle 238: audio=1 chunks, visual_changed=False
-[backend] 2026-02-28 16:35:27,443 [backend.dashboard_server] INFO: Scheduling ingest for stt_raw perception
-[backend] INFO:     127.0.0.1:51444 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51444 - "GET /api/health HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:35:28,887 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:35:28,925 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
-[backend] 2026-02-28 16:35:29,870 [backend.agents.analyst] WARNING: Analyst fallback: No key points captured yet.
-[backend] 2026-02-28 16:35:29,934 [backend.main] INFO: Cycle 2 [24.3s] → continue_observing | pts:0 | acts:0 | decs:0 | gaps:0
-[backend] INFO:     127.0.0.1:51444 - "GET /api/summary HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51444 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51444 - "GET /api/health HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:35:34,706 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:35:34,775 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
-[backend] INFO:     127.0.0.1:51444 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:35:36,320 [backend.dashboard_server] INFO: STT audio chunk (21 chars): My cord. No. My cord.
-[backend] 2026-02-28 16:35:38,010 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:35:38,017 [faster_whisper] INFO: VAD filter removed 00:00.080 of audio
-[backend] 2026-02-28 16:35:38,138 [backend.dashboard_server] INFO: Flush cycle 272: audio=1 chunks, visual_changed=False
-[backend] 2026-02-28 16:35:38,138 [backend.dashboard_server] INFO: Scheduling ingest for stt_raw perception
-[backend] INFO:     127.0.0.1:51444 - "GET /api/health HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51444 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:35:40,594 [backend.dashboard_server] INFO: STT audio chunk (29 chars): So, I'm using the agent here.
-[backend] 2026-02-28 16:35:41,427 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:35:41,614 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
-[backend] 2026-02-28 16:35:42,386 [backend.dashboard_server] INFO: STT audio chunk (58 chars): Now I am looking into it, at least I am going to start it.
-2026-02-28 16:35:42,386 [backend.dashboard_server] INFO: Flush cycle 287: audio=2 chunks, visual_changed=False
-[backend] 2026-02-28 16:35:42,386 [backend.dashboard_server] INFO: Scheduling ingest for stt_raw perception
-[backend] INFO:     127.0.0.1:51444 - "GET /api/health HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51452 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:35:44,550 [backend.dashboard_server] INFO: OCR result (936 chars): ## Analysis of the Image The image shows a person with dark, wavy hair and glasses, looking downwards. They are wearing 
-[backend] 2026-02-28 16:35:45,383 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:35:45,555 [faster_whisper] INFO: VAD filter removed 00:02.320 of audio
-[backend] 2026-02-28 16:35:46,238 [backend.dashboard_server] INFO: STT audio chunk (5 chars): Okay.
-[backend] 2026-02-28 16:35:46,830 [backend.dashboard_server] INFO: Flush cycle 302: audio=1 chunks, visual_changed=True
-2026-02-28 16:35:46,830 [backend.dashboard_server] INFO: Scheduling ingest for ocr perception
-2026-02-28 16:35:46,830 [backend.dashboard_server] INFO: Scheduling ingest for stt_raw perception
-[backend] INFO:     127.0.0.1:51452 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51452 - "GET /api/health HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:35:48,716 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:35:48,752 [faster_whisper] INFO: VAD filter removed 00:00.000 of audio
-[backend] 2026-02-28 16:35:49,692 [backend.dashboard_server] INFO: STT audio chunk (5 chars): Yeah.
-[backend] 2026-02-28 16:35:49,827 [backend.agents.analyst] WARNING: Analyst fallback: No key points captured yet.
-[backend] 2026-02-28 16:35:49,966 [backend.main] INFO: Cycle 3 [20.0s] → continue_observing | pts:0 | acts:0 | decs:0 | gaps:0
-[backend] INFO:     127.0.0.1:51452 - "GET /api/summary HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:35:51,431 [backend.dashboard_server] INFO: Flush cycle 318: audio=1 chunks, visual_changed=False
-2026-02-28 16:35:51,555 [backend.dashboard_server] INFO: Scheduling ingest for stt_raw perception
-[backend] INFO:     127.0.0.1:51452 - "GET /api/capture/status HTTP/1.1" 200 OK
-[backend] INFO:     127.0.0.1:51452 - "GET /api/health HTTP/1.1" 200 OK
-[backend] 2026-02-28 16:35:54,362 [faster_whisper] INFO: Processing audio with duration 00:03.000
-[backend] 2026-02-28 16:35:54,460 [faster_whisper] INFO: VAD filter removed 00:03.000 of audio
+[backend] 2026-02-28 17:43:22,079 [pipeline] INFO: Warming up VLM Camera Model on GPU... (this takes a moment)
+[backend] 2026-02-28 17:43:35,656 [pipeline] INFO: Camera ready (model=mlx-community/gemma-3n-e4b[backend] /opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/resource_tracker.py:301: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-k2uj1_sg'}
+  warnings.warn(
+ard: http://127.0.0.1:8765
+  Log:      data/session_20260228_174305.jsonl
+============================================================
+  Listening… (Ctrl+C to stop)
+
+[backend] 2026-02-28 17:43:36,942 [pipeline] INFO: Camera open (every 5.0s)
+[backend]   [001] batch: 1 events (stt=1 ocr=0)
+[backend]         state:  topic=Unknown | domain=general | pts=0 acts=0 decs=0 gaps=0
+[backend]         action: continue_observing: No action needed: Meeting content is non-actionable
+
+[backend]   [002] batch: 9 events (stt=8 ocr=1)
+[backend]         state:  topic=Unknown | domain=engineering | pts=2 acts=0 decs=0 gaps=0
+[backend]         action: flag_gap: Meeting content not captured  {"topic": "Meeting content not captured", "gap_type": "no_decision", "suggestion": "Extract key decisions"}
+
+[backend]   [003] batch: 7 events (stt=7 ocr=0)
+[backend]         state:  topic=Local RAG | domain=engineering | pts=3 acts=0 decs=0 gaps=1
+[backend]         action: flag_gap: Hallucinations in diagrams: Decide on a process for validating data before diagrams  {"topic": "Hallucinations in diagrams", "gap_type": "no_decision", "suggestion": "Decide on a process for validating dat…
+
+[backend]   [004] batch: 5 events (stt=5 ocr=0)
+[backend]         state:  topic=Local RAG | domain=engineering | pts=5 acts=0 decs=0 gaps=2
+[backend]         action: flag_gap: Fraud detection for queries like 'payment' was suggested but no owner assigned  {"topic": "fraud detection for queries like 'payment'", "gap_type": "no_owner", "suggestion": "Assign owner"}
+
+[backend]   [005] batch: 5 events (stt=5 ocr=0)
+[backend]         state:  topic=Local RAG | domain=engineering | pts=6 acts=0 decs=0 gaps=3[backend] 
+[backend]         action: flag_gap: Domain: engineering; Embedding size impacting retrieval quality  {"topic": "Embedding size impacting retrieval quality", "gap_type": "no_decision", "suggestion": "Set embedding size"}
+
+[backend]   [006] batch: 5 events (stt=5 ocr=0)
+[backend]         state:  topic=Local RAG | domain=engineering | pts=7 acts=0 decs=0 gaps=4
+[backend]         action: flag_gap: Domain: engineering has no owner  {"topic": "Domain: engineering", "gap_type": "no_owner", "suggestion": "Assign owner"}
+
+[backend]   [007] batch: 4 events (stt=4 ocr=0)
+[backend]         state:  topic=Local RAG | domain=engineering | pts=7 acts=0 decs=0 gaps=5
+[backend]         action: flag_gap: Fraud detection for payment queries: Decide on fraud detection strategy  {"topic": "fraud detection for payment queries", "gap_type": "no_decision", "suggestion": "Decide on fraud detection str…
+
+[backend]   [008] batch: 6 events (stt=6 ocr=0)
+[backend]         state:  topic=Local RAG | domain=engineering | pts=8 acts=0 decs=0 gaps=6[backend] 
+[backend]         action: flag_gap: Context window overflow: Set context window limit  {"topic": "Context window overflow", "gap_type": "no_decision", "suggestion": "Set context window limit"}
+
+[backend]   [009] batch: 5 events (stt=5 ocr=0)
+[backend]         state:  topic=Local RAG | domain=engineering | pts=9 acts=0 decs=0 gaps=7
+[backend]         action: flag_gap: Audio chunking latency identified  {"topic": "Audio chunking latency", "gap_type": "no_decision", "suggestion": "Set latency target"}
+
+[backend]   [010] batch: 8 events (stt=6 ocr=2)
+[backend]         state:  topic=Local RAG | domain=engineering | pts=11 acts=0 decs=0 gaps=8[backend] 
+[backend]         action: flag_gap: TVN data reported for cancer system event  {"topic": "TVN data reporting", "gap_type": "no_owner", "suggestion": "Assign owner"}
+
+[backend]   [011] batch: 6 events (stt=6 ocr=0)
+[backend]         state:  topic=Local RAG | domain=engineering | pts=11 acts=0 decs=0 gaps=9
+[backend]         action: flag_gap: Audio chunking latency gap: No owner assigned  {"topic": "Audio chunking latency", "gap_type": "no_owner", "suggestion": "Assign owner"}
+
+[backend]   [012] batch: 5 events (stt=4 ocr=1)
+[backend]         state:  topic=Local RAG | domain=engineering | pts=12 acts=0 decs=0 gaps=10
+[backend]         action: flag_gap: Domain: engineering is not assigned  {"topic": "Domain: engineering", "gap_type": "no_owner", "suggestion": "Assign owner"}
+
+[backend]   [013] batch: 5 events (stt=5 ocr=0)
+[backend]         state:  topic=Local RAG | domain=engineering | pts=13 acts=0 decs=0 gaps=10
+[backend]         action: flag_gap: Audio chunking latency observed: 20ms  {"topic": "Audio chunking latency", "gap_type": "no_decision", "suggestion": "Set latency target"}
+
+[backend]   [014] batch: 2 events (stt=1 ocr=1)
+[backend]         state:  topic=Local RAG | domain=engineering | pts=15 acts=0 decs=0 gaps=10
+[backend]         action: flag_gap: Meeting content too dense  {"topic": "Meeting content too dense", "gap_type": "no_decision", "suggestion": "Extract single key decision"}
+
+[backend]   [015] batch: 1 events (stt=0 ocr=1)
+[backend]         state:  topic=Local RAG | domain=engineering | pts=16 acts=0 decs=0 gaps=11
+[backend]         action: flag_gap: Domain: engineering - Embedding size impacting retrieval quality  {"topic": "Domain: engineering", "gap_type": "no_decision", "suggestion": "Decide on embedding size"}
+
+[backend]   [016] (1 dup)
+[backend]   [017] (no input)
+[backend]   [018] (no input)
+[backend]   [019] (no input)
+[backend]   [020] (no input)
+[backend]   [021] (no input)
+[backend]   [022] (no input)
+[backend]   [023] (no input)
+[backend]   [024] (no input)
+[backend]   [025] batch: 1 events (stt=1 ocr=0)
+[backend]         state:  topic=Local RAG | domain=engineering | pts=16 acts=0 decs=0 gaps=12
+[backend]         action: flag_gap: Meeting content too dense  {"topic": "Meeting content too dense", "gap_type": "unclear_scope", "suggestion": "Extract key points"}[backend] 
+
+[backend]   [026] batch: 12 events (stt=11 ocr=1)
+[backend]         state:  topic=Local RAG | domain=engineering | pts=16 acts=0 decs=0 gaps=13
+[backend]         action: flag_gap: Domain: engineering has no owner  {"topic": "Domain: engineering", "gap_type": "no_owner", "suggestion": "Assign owner"}[backend] 
+
+[backend]   [027] batch: 4 events (stt=3 ocr=1)
+[backend]         state:  topic=Local RAG | domain=engineering | pts=17 acts=0 decs=0 gaps=13
+[backend]         action: flag_gap: Domain: engineering - Embedding size impacting retrieval quality  {"topic": "Domain: engineering", "gap_type": "no_decision", "suggestion": "Decide on embedding size"}
+
+[backend]   [028] batch: 19 events (stt=16 ocr=3)
+[backend]         state:  topic=Local RAG | domain=engineering | pts=19 acts=0 decs=0 gaps=13
+[backend]         action: flag_gap: Rank implementation needs attention  {"topic": "Rank implementation needs attention", "gap_type": "no_owner", "suggestion": "Assign owner"}
+
+[backend]   [029] batch: 2 events (stt=0 ocr=2)

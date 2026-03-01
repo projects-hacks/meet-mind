@@ -259,7 +259,10 @@ class GemmaMLX:
             try:
                 from mlx_lm import load
                 logger.info(f"Loading MLX model: {self._model_id}")
-                self._model, self._tokenizer = load(self._model_id)
+                # MUST hold global inference lock during load to prevent Metal OOM/Timeouts
+                # if another thread is currently inferencing
+                with mlx_inference_lock:
+                    self._model, self._tokenizer = load(self._model_id)
                 self._load_error = None
                 logger.info(f"MLX model loaded: {self._model_id}")
             except Exception as e:

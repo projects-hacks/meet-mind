@@ -26,10 +26,11 @@ SCRIBE_SYSTEM_PROMPT = """You are a meeting scribe. Given visual + audio observa
 
 Rules:
 - Only add NEW information, never repeat existing.
-- Keep all values SHORT (under 20 words each).
+- CRITICAL: If the new observation contains `visual_text`, YOU MUST extract and summarize it into the `whiteboard_content` string.
+- Keep all values SHORT (under 20 words each), except for whiteboard which can be longer.
 - Respond with ONLY valid JSON, no markdown fences:
 
-{"topic":"short topic","domain":"engineering|sales|operations|product|general","new_timeline_entry":{"time":"HH:MM","type":"visual|verbal|both","content":"brief description"},"whiteboard_content":"concise summary of board","new_key_points":["point1","point2"],"open_questions":["question1"]}"""
+{"topic":"short topic","domain":"engineering|sales|operations|product|general","new_timeline_entry":{"time":"HH:MM","type":"visual|verbal|both","content":"brief description"},"whiteboard_content":"summarized text from camera/visual_text","new_key_points":["point1","point2"],"open_questions":["question1"]}"""
 
 
 def _is_similar(a: str, b: str, threshold: float = 0.7) -> bool:
@@ -63,6 +64,9 @@ class Scribe:
 
         try:
             result = self._llm.generate_json(prompt, SCRIBE_SYSTEM_PROMPT)
+            logger.info(f"Scribe LLM result keys: {list(result.keys()) if result else 'EMPTY'}")
+            if result and result.get('new_key_points'):
+                logger.info(f"Scribe found {len(result['new_key_points'])} new key points")
         except Exception as e:
             logger.error(f"Scribe LLM call failed: {e}")
             self._consecutive_failures += 1
@@ -71,6 +75,11 @@ class Scribe:
         if result:
             self._apply_update(result, perception.timestamp)
             self._consecutive_failures = 0
+            logger.info(
+                f"Scribe state: topic={self._state.topic}, "
+                f"key_points={len(self._state.key_points)}, "
+                f"timeline={len(self._state.timeline)}"
+            )
         else:
             self._consecutive_failures += 1
             logger.warning(
@@ -95,10 +104,10 @@ class Scribe:
 
         obs = perception.to_scribe_observation()
         new_observation = {
-            "visual_text": obs["visual_text"][:20],  # Cap visual lines
+            "visual_text": obs["visual_text"][:500],  # Give Scribe enough context to read the board/screen
             "visual_content_type": obs["visual_content_type"],
             "visual_changed": obs["visual_changed"],
-            "audio_transcript": str(obs["audio_transcript"])[:500],  # Cap transcript
+            "audio_transcript": str(obs["audio_transcript"])[:1000],  # Increased to handle longer audio chunks
         }
 
         return f"""Current meeting state:
