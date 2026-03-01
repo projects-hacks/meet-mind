@@ -87,18 +87,12 @@ function render(summary) {
   const suggestionItems = summary.suggestions || [];
   const insightItems = summary.insights || [];
 
-  // Gaps
-  const gapsEl = q('gaps');
+  // Gaps (deprecated)
   const gapsHeader = q('hGaps');
-  if (gapItems.length) {
-    renderList(gapsEl, gapItems, (g) => g.topic);
-    if (gapsHeader) gapsHeader.style.display = '';
-    gapsEl.style.display = '';
-  } else {
-    gapsEl.innerHTML = '';
-    gapsEl.style.display = 'none';
-    if (gapsHeader) gapsHeader.style.display = 'none';
-  }
+  if (gapsHeader) gapsHeader.style.display = 'none';
+  const gapsEl = q('gaps');
+  if (gapsEl) gapsEl.style.display = 'none';
+
 
   // Suggestions
   const sugEl = q('suggestions');

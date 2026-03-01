@@ -1,107 +1,15 @@
-[backend] 2026-02-28 17:43:06,216 [pipeline] INFO: Dashboard: http://127.0.0.1:8765
-[backend] 2026-02-28 17:43:06,216 [pipeline] INFO: Loading text LLM…
-[backend] 2026-02-28 17:43:06,272 [pipeline] INFO: Warming up Text LLM on GPU...
-[backend] Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s][backend] Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 139422.85it/s]
-[backend] 2026-02-28 17:43:10,680 [pipeline] INFO: Text LLM ready
-2026-02-28 17:43:10,683 [pipeline] INFO: Starting mic (whisper-base, chunk=3.0s)…
-[backend] 2026-02-28 17:43:12,716 [pipeline] INFO: Mic ready
-[backend] 2026-02-28 17:43:12,716 [pipeline] INFO: Loading VLM for camera…
-[backend] objc[43298]: Class AVFFrameReceiver is implemented in both /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/cv2/.dylibs/libavdevice.61.3.100.dylib (0x33bf243a8) and /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/av/.dylibs/libavdevice.62.1.100.dylib (0x3434e43a8). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
-objc[43298]: Class AVFAudioReceiver is implemented in both /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/cv2/.dylibs/libavdevice.61.3.100.dylib (0x33bf243f8) and /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/av/.dylibs/libavdevice.62.1.100.dylib (0x3434e43f8). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
-[backend] Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s][backend] Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 56362.43it/s]
+[backend] 2026-02-28 17:58:38,947 [pipeline] INFO: Dashboard: http://127.0.0.1:8765
+[backend] 2026-02-28 17:58:38,948 [pipeline] INFO: Loading text LLM…
+[backend] ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8765): address already in use
+[backend] 2026-02-28 17:58:39,010 [pipeline] INFO: Warming up Text LLM on GPU...
+[backend] Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s][backend] Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 71291.29it/s]
+[backend] 2026-02-28 17:58:43,373 [pipeline] INFO: Text LLM ready
+2026-02-28 17:58:43,374 [pipeline] INFO: Starting mic (whisper-base, chunk=3.0s)…
+[backend] 2026-02-28 17:58:44,082 [pipeline] INFO: Mic ready
+2026-02-28 17:58:44,082 [pipeline] INFO: Loading VLM for camera…
+[backend] objc[56121]: Class AVFFrameReceiver is implemented in both /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/cv2/.dylibs/libavdevice.61.3.100.dylib (0x337d103a8) and /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/av/.dylibs/libavdevice.62.1.100.dylib (0x33f91c3a8). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+[backend] objc[56121]: Class AVFAudioReceiver is implemented in both /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/cv2/.dylibs/libavdevice.61.3.100.dylib (0x337d103f8) and /Users/maverickrajeev/Documents/projects/meet-mind/.venv/lib/python3.13/site-packages/av/.dylibs/libavdevice.62.1.100.dylib (0x33f91c3f8). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+[backend] Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s][backend] Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 77912.77it/s]
 [backend] Using `use_fast=True` but `torchvision` is not available. Falling back to the slow image processor.
-[backend] 2026-02-28 17:43:22,079 [pipeline] INFO: Warming up VLM Camera Model on GPU... (this takes a moment)
-[backend] 2026-02-28 17:43:35,656 [pipeline] INFO: Camera ready (model=mlx-community/gemma-3n-e4b[backend] /opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/resource_tracker.py:301: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-k2uj1_sg'}
-  warnings.warn(
-ard: http://127.0.0.1:8765
-  Log:      data/session_20260228_174305.jsonl
-============================================================
-  Listening… (Ctrl+C to stop)
-
-[backend] 2026-02-28 17:43:36,942 [pipeline] INFO: Camera open (every 5.0s)
-[backend]   [001] batch: 1 events (stt=1 ocr=0)
-[backend]         state:  topic=Unknown | domain=general | pts=0 acts=0 decs=0 gaps=0
-[backend]         action: continue_observing: No action needed: Meeting content is non-actionable
-
-[backend]   [002] batch: 9 events (stt=8 ocr=1)
-[backend]         state:  topic=Unknown | domain=engineering | pts=2 acts=0 decs=0 gaps=0
-[backend]         action: flag_gap: Meeting content not captured  {"topic": "Meeting content not captured", "gap_type": "no_decision", "suggestion": "Extract key decisions"}
-
-[backend]   [003] batch: 7 events (stt=7 ocr=0)
-[backend]         state:  topic=Local RAG | domain=engineering | pts=3 acts=0 decs=0 gaps=1
-[backend]         action: flag_gap: Hallucinations in diagrams: Decide on a process for validating data before diagrams  {"topic": "Hallucinations in diagrams", "gap_type": "no_decision", "suggestion": "Decide on a process for validating dat…
-
-[backend]   [004] batch: 5 events (stt=5 ocr=0)
-[backend]         state:  topic=Local RAG | domain=engineering | pts=5 acts=0 decs=0 gaps=2
-[backend]         action: flag_gap: Fraud detection for queries like 'payment' was suggested but no owner assigned  {"topic": "fraud detection for queries like 'payment'", "gap_type": "no_owner", "suggestion": "Assign owner"}
-
-[backend]   [005] batch: 5 events (stt=5 ocr=0)
-[backend]         state:  topic=Local RAG | domain=engineering | pts=6 acts=0 decs=0 gaps=3[backend] 
-[backend]         action: flag_gap: Domain: engineering; Embedding size impacting retrieval quality  {"topic": "Embedding size impacting retrieval quality", "gap_type": "no_decision", "suggestion": "Set embedding size"}
-
-[backend]   [006] batch: 5 events (stt=5 ocr=0)
-[backend]         state:  topic=Local RAG | domain=engineering | pts=7 acts=0 decs=0 gaps=4
-[backend]         action: flag_gap: Domain: engineering has no owner  {"topic": "Domain: engineering", "gap_type": "no_owner", "suggestion": "Assign owner"}
-
-[backend]   [007] batch: 4 events (stt=4 ocr=0)
-[backend]         state:  topic=Local RAG | domain=engineering | pts=7 acts=0 decs=0 gaps=5
-[backend]         action: flag_gap: Fraud detection for payment queries: Decide on fraud detection strategy  {"topic": "fraud detection for payment queries", "gap_type": "no_decision", "suggestion": "Decide on fraud detection str…
-
-[backend]   [008] batch: 6 events (stt=6 ocr=0)
-[backend]         state:  topic=Local RAG | domain=engineering | pts=8 acts=0 decs=0 gaps=6[backend] 
-[backend]         action: flag_gap: Context window overflow: Set context window limit  {"topic": "Context window overflow", "gap_type": "no_decision", "suggestion": "Set context window limit"}
-
-[backend]   [009] batch: 5 events (stt=5 ocr=0)
-[backend]         state:  topic=Local RAG | domain=engineering | pts=9 acts=0 decs=0 gaps=7
-[backend]         action: flag_gap: Audio chunking latency identified  {"topic": "Audio chunking latency", "gap_type": "no_decision", "suggestion": "Set latency target"}
-
-[backend]   [010] batch: 8 events (stt=6 ocr=2)
-[backend]         state:  topic=Local RAG | domain=engineering | pts=11 acts=0 decs=0 gaps=8[backend] 
-[backend]         action: flag_gap: TVN data reported for cancer system event  {"topic": "TVN data reporting", "gap_type": "no_owner", "suggestion": "Assign owner"}
-
-[backend]   [011] batch: 6 events (stt=6 ocr=0)
-[backend]         state:  topic=Local RAG | domain=engineering | pts=11 acts=0 decs=0 gaps=9
-[backend]         action: flag_gap: Audio chunking latency gap: No owner assigned  {"topic": "Audio chunking latency", "gap_type": "no_owner", "suggestion": "Assign owner"}
-
-[backend]   [012] batch: 5 events (stt=4 ocr=1)
-[backend]         state:  topic=Local RAG | domain=engineering | pts=12 acts=0 decs=0 gaps=10
-[backend]         action: flag_gap: Domain: engineering is not assigned  {"topic": "Domain: engineering", "gap_type": "no_owner", "suggestion": "Assign owner"}
-
-[backend]   [013] batch: 5 events (stt=5 ocr=0)
-[backend]         state:  topic=Local RAG | domain=engineering | pts=13 acts=0 decs=0 gaps=10
-[backend]         action: flag_gap: Audio chunking latency observed: 20ms  {"topic": "Audio chunking latency", "gap_type": "no_decision", "suggestion": "Set latency target"}
-
-[backend]   [014] batch: 2 events (stt=1 ocr=1)
-[backend]         state:  topic=Local RAG | domain=engineering | pts=15 acts=0 decs=0 gaps=10
-[backend]         action: flag_gap: Meeting content too dense  {"topic": "Meeting content too dense", "gap_type": "no_decision", "suggestion": "Extract single key decision"}
-
-[backend]   [015] batch: 1 events (stt=0 ocr=1)
-[backend]         state:  topic=Local RAG | domain=engineering | pts=16 acts=0 decs=0 gaps=11
-[backend]         action: flag_gap: Domain: engineering - Embedding size impacting retrieval quality  {"topic": "Domain: engineering", "gap_type": "no_decision", "suggestion": "Decide on embedding size"}
-
-[backend]   [016] (1 dup)
-[backend]   [017] (no input)
-[backend]   [018] (no input)
-[backend]   [019] (no input)
-[backend]   [020] (no input)
-[backend]   [021] (no input)
-[backend]   [022] (no input)
-[backend]   [023] (no input)
-[backend]   [024] (no input)
-[backend]   [025] batch: 1 events (stt=1 ocr=0)
-[backend]         state:  topic=Local RAG | domain=engineering | pts=16 acts=0 decs=0 gaps=12
-[backend]         action: flag_gap: Meeting content too dense  {"topic": "Meeting content too dense", "gap_type": "unclear_scope", "suggestion": "Extract key points"}[backend] 
-
-[backend]   [026] batch: 12 events (stt=11 ocr=1)
-[backend]         state:  topic=Local RAG | domain=engineering | pts=16 acts=0 decs=0 gaps=13
-[backend]         action: flag_gap: Domain: engineering has no owner  {"topic": "Domain: engineering", "gap_type": "no_owner", "suggestion": "Assign owner"}[backend] 
-
-[backend]   [027] batch: 4 events (stt=3 ocr=1)
-[backend]         state:  topic=Local RAG | domain=engineering | pts=17 acts=0 decs=0 gaps=13
-[backend]         action: flag_gap: Domain: engineering - Embedding size impacting retrieval quality  {"topic": "Domain: engineering", "gap_type": "no_decision", "suggestion": "Decide on embedding size"}
-
-[backend]   [028] batch: 19 events (stt=16 ocr=3)
-[backend]         state:  topic=Local RAG | domain=engineering | pts=19 acts=0 decs=0 gaps=13
-[backend]         action: flag_gap: Rank implementation needs attention  {"topic": "Rank implementation needs attention", "gap_type": "no_owner", "suggestion": "Assign owner"}
-
-[backend]   [029] batch: 2 events (stt=0 ocr=2)
+[backend] 2026-02-28 17:59:12,297 [pipeline] INFO: Warming up VLM Camera Model on GPU... (this takes a moment)
+[backend] libc++abi: terminating due to uncaught exception of type std::runtime_error: [METAL] Command buffer execution failed: Insufficient Memory (00000008:kIOGPUCommandBufferCallbackErrorOutOfMemory)

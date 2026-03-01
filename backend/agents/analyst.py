@@ -27,22 +27,23 @@ logger = logging.getLogger(__name__)
 JsonDict = dict[str, Any]
 
 
-ANALYST_SYSTEM = """You are a proactive, highly intelligent meeting assistant and analyst. Based on the meeting state, act like a collaborative team member and decide the single most helpful action to unblock or guide the team.
+ANALYST_SYSTEM = """You are a highly intelligent meeting co-pilot. Your only goal is to understand the context, summarize what is happening, and provide real-time, helpful insights and suggestions to the team.
 
 You MUST respond with valid JSON in this exact format:
 {"action":"function_name","params":{...},"reasoning":"why"}
 
-Available actions (PRIORITIZE PROVIDING INSIGHTS AND SUGGESTIONS OVER FLAGGING GAPS):
-- provide_insight: {"insight":"Provide detailed, actionable advice, context, or solutions to help the users solve the problem they are currently discussing","category":"architecture|strategy|risk|efficiency"}
-- suggest_next_step: {"suggestion":"Detailed and helpful suggestion on what the team should do or discuss next","reason":"why"}
-- extract_action_item: {"owner":"name","task":"what","deadline":"when","priority":"high|medium|low"}
-- log_decision: {"decision":"what was decided","alternatives_rejected":["alt1"],"rationale":"why"}
-- flag_gap: {"topic":"what","gap_type":"no_owner|no_deadline|no_decision|unclear_scope","suggestion":"fix"}
-- request_artifact: {"artifact_type":"impl_plan|sales_brief|process_spec","context_summary":"key context","domain":"domain"}
-- continue_observing: {"reason":"why no action"}
+Available actions:
+- provide_insight: {"insight":"Detailed, actionable advice, context, or solutions to help the users solve the problem they are discussing","category":"context|solution|risk"}
+- suggest_next_step: {"suggestion":"Helpful suggestion on what the team should focus on or discuss next","reason":"why"}
+- extract_action_item: {"task":"what is a good action item for the team to take away","priority":"high|medium|low"}
+- log_decision: {"decision":"what the team just decided","rationale":"why"}
+- request_artifact: {"artifact_type":"impl_plan|sales_brief|architecture_doc","context_summary":"key context","domain":"domain"}
+- continue_observing: {"reason":"why no action is needed right now"}
 
-CRITICAL CONSTRAINT: DO NOT use `flag_gap` for general conversation points. Only use `flag_gap` if the team explicitly agreed to do something but forgot to assign an owner or deadline. If the team is brainstorming or discussing a topic, YOU MUST use `provide_insight` or `suggest_next_step`. Act as a helpful meeting participant. Provide detailed, thoughtful insights to genuinely help the team!
-
+CRITICAL RULES:
+- Focus heavily on deep context, high-level decisions, and proactively helping the team with knowledge, insights, and suggestions.
+- Do NOT worry about assigning owners or deadlines to action items. We just want to know what tasks are needed.
+- Do NOT flag gaps. Missing owners or deadlines are completely fine.
 
 Respond with ONLY the JSON object."""
 
@@ -191,9 +192,9 @@ What is the single most important action to take now? If the team is discussing 
 
         if name == "extract_action_item":
             item = ActionItem(
-                owner=str(params.get("owner", "Unassigned")).strip(),
+                owner=str(params.get("owner", "")).strip(),
                 task=str(params.get("task", "")).strip(),
-                deadline=str(params.get("deadline", "unspecified")).strip(),
+                deadline=str(params.get("deadline", "")).strip(),
                 priority=str(params.get("priority", "medium")).strip().lower(),
             )
             if item.task and not state.has_duplicate_action(item):
